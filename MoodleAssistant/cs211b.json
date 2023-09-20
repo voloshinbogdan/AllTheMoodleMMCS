@@ -1,0 +1,9 @@
+{
+	"course": "",
+	"data_folder": "",
+	"l": "cc",
+	"fexts": ["*.cpp", "*.h"],
+	"IDE": "vs",
+	"groups": {}
+	}
+}
