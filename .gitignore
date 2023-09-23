@@ -754,3 +754,6 @@ pyrightconfig.json
 
 ## Custom ignore
 MoodleAssistant/old_configs
+MoodleAssistant/credentials.json
+MoodleAssistant/cs*.json
+CheckMoodle/config.json
