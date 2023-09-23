@@ -28,7 +28,7 @@ for p in submissions:
     if os.path.exists(scp):
         with open(scp, 'r', encoding='utf-8-sig') as f:
             sc = json.load(f)
-        ident = 'Участник' + os.path.basename(p).split('_')[-4]
+        ident = 'Участник' + list(filter(lambda x: x != '', os.path.basename(p).split('_')))[-3]
         table.loc[ident, 'Оценка'] = sc['score']
         table.loc[ident, 'Отзыв в виде комментария'] = sc['comment']
 
