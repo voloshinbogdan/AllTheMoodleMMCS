@@ -39,6 +39,8 @@ web = moodle.open_login(None, None)
 web.go_to(moodle.upload_grades.format(params['lesson_id']))
 
 time.sleep(0.5)
+web.click('Разрешить обновление записей, которые были изменены в Moodle раньше, чем в ведомости.')
+time.sleep(0.5)
 web.click('Выберите файл')
 time.sleep(0.5)
 inps = web.driver.find_element_by_name('repo_upload_file')
