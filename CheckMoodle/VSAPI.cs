@@ -16,7 +16,7 @@ namespace CheckMoodle
         private Process proc;
         private Action<Process> ConfigureApp;
 
-        public VSAPI(string Params = "", Action<Process> ConfigureApp = null)
+        public VSAPI(string version, string Params = "", Action<Process> ConfigureApp = null)
         {
             this.ConfigureApp = ConfigureApp;
             bool isPreRelease = false;
@@ -24,7 +24,7 @@ namespace CheckMoodle
             string installationPath = setupInstance.GetInstallationPath();
             string executablePath = Path.Combine(installationPath, @"Common7\IDE\devenv.exe");
             Process vsProcess = Process.Start(executablePath, Params);
-            string runningObjectDisplayName = $"VisualStudio.DTE.16.0:{vsProcess.Id}";
+            string runningObjectDisplayName = $"VisualStudio.DTE.{version}.0:{vsProcess.Id}";
 
             IEnumerable<string> runningObjectDisplayNames = null;
             object runningObject;

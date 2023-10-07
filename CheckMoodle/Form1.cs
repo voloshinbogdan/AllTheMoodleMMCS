@@ -99,7 +99,7 @@ namespace CheckMoodle
                     });
                     break;
                 case "vs":
-                    IDE = new VSAPI(@".", p =>
+                    IDE = new VSAPI((string)config.vsversion, @".", p =>
                     {
                         IDEResize(p);
                         if (Submissions.SelectedIndex == -1)
