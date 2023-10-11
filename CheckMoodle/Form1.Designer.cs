@@ -36,6 +36,7 @@ namespace CheckMoodle
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.maxScL = new System.Windows.Forms.Label();
             this.addMoss = new System.Windows.Forms.Button();
             this.moss = new System.Windows.Forms.LinkLabel();
@@ -46,14 +47,21 @@ namespace CheckMoodle
             this.Save = new System.Windows.Forms.Button();
             this.back = new System.Windows.Forms.Button();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.Perfect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.TaskName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TaskScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MaxScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TaskComment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.scoreError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -97,6 +105,10 @@ namespace CheckMoodle
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Name = "splitContainer3";
             // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.dataGridView1);
+            // 
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.maxScL);
@@ -109,14 +121,29 @@ namespace CheckMoodle
             this.splitContainer3.Panel2.Controls.Add(this.Save);
             this.splitContainer3.Panel2.Controls.Add(this.back);
             this.splitContainer3.Size = new System.Drawing.Size(534, 167);
-            this.splitContainer3.SplitterDistance = 25;
+            this.splitContainer3.SplitterDistance = 322;
             this.splitContainer3.TabIndex = 0;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Perfect,
+            this.TaskName,
+            this.TaskScore,
+            this.MaxScore,
+            this.TaskComment});
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(322, 167);
+            this.dataGridView1.TabIndex = 0;
             // 
             // maxScL
             // 
             this.maxScL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.maxScL.AutoSize = true;
-            this.maxScL.Location = new System.Drawing.Point(428, 11);
+            this.maxScL.Location = new System.Drawing.Point(131, 11);
             this.maxScL.Name = "maxScL";
             this.maxScL.Size = new System.Drawing.Size(0, 13);
             this.maxScL.TabIndex = 13;
@@ -124,7 +151,7 @@ namespace CheckMoodle
             // addMoss
             // 
             this.addMoss.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addMoss.Location = new System.Drawing.Point(296, 5);
+            this.addMoss.Location = new System.Drawing.Point(-1, 5);
             this.addMoss.Name = "addMoss";
             this.addMoss.Size = new System.Drawing.Size(18, 23);
             this.addMoss.TabIndex = 12;
@@ -136,7 +163,7 @@ namespace CheckMoodle
             // 
             this.moss.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moss.AutoSize = true;
-            this.moss.Location = new System.Drawing.Point(258, 8);
+            this.moss.Location = new System.Drawing.Point(-39, 8);
             this.moss.Name = "moss";
             this.moss.Size = new System.Drawing.Size(31, 13);
             this.moss.TabIndex = 7;
@@ -147,7 +174,7 @@ namespace CheckMoodle
             // SaveB
             // 
             this.SaveB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveB.Location = new System.Drawing.Point(428, 113);
+            this.SaveB.Location = new System.Drawing.Point(131, 113);
             this.SaveB.Name = "SaveB";
             this.SaveB.Size = new System.Drawing.Size(72, 23);
             this.SaveB.TabIndex = 11;
@@ -158,7 +185,7 @@ namespace CheckMoodle
             // score
             // 
             this.score.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.score.Location = new System.Drawing.Point(365, 8);
+            this.score.Location = new System.Drawing.Point(68, 8);
             this.score.Name = "score";
             this.score.Size = new System.Drawing.Size(57, 20);
             this.score.TabIndex = 1;
@@ -172,7 +199,7 @@ namespace CheckMoodle
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comment.Location = new System.Drawing.Point(3, 34);
             this.comment.Name = "comment";
-            this.comment.Size = new System.Drawing.Size(499, 75);
+            this.comment.Size = new System.Drawing.Size(202, 75);
             this.comment.TabIndex = 2;
             this.comment.Text = "";
             // 
@@ -183,14 +210,14 @@ namespace CheckMoodle
             this.Submissions.FormattingEnabled = true;
             this.Submissions.Location = new System.Drawing.Point(3, 138);
             this.Submissions.Name = "Submissions";
-            this.Submissions.Size = new System.Drawing.Size(497, 21);
+            this.Submissions.Size = new System.Drawing.Size(200, 21);
             this.Submissions.TabIndex = 9;
             this.Submissions.SelectedIndexChanged += new System.EventHandler(this.Submissions_SelectedIndexChanged);
             // 
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(365, 113);
+            this.Save.Location = new System.Drawing.Point(68, 113);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(57, 23);
             this.Save.TabIndex = 3;
@@ -201,7 +228,7 @@ namespace CheckMoodle
             // back
             // 
             this.back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.back.Location = new System.Drawing.Point(303, 113);
+            this.back.Location = new System.Drawing.Point(6, 113);
             this.back.Name = "back";
             this.back.Size = new System.Drawing.Size(56, 23);
             this.back.TabIndex = 8;
@@ -213,6 +240,41 @@ namespace CheckMoodle
             // 
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
+            // Perfect
+            // 
+            this.Perfect.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            this.Perfect.HeaderText = "Perfect";
+            this.Perfect.Name = "Perfect";
+            this.Perfect.Width = 21;
+            // 
+            // TaskName
+            // 
+            this.TaskName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            this.TaskName.HeaderText = "Name";
+            this.TaskName.Name = "TaskName";
+            this.TaskName.Width = 21;
+            // 
+            // TaskScore
+            // 
+            this.TaskScore.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            this.TaskScore.HeaderText = "Score";
+            this.TaskScore.Name = "TaskScore";
+            this.TaskScore.Width = 21;
+            // 
+            // MaxScore
+            // 
+            this.MaxScore.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader;
+            this.MaxScore.HeaderText = "Max Score";
+            this.MaxScore.Name = "MaxScore";
+            this.MaxScore.Width = 21;
+            // 
+            // TaskComment
+            // 
+            this.TaskComment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.TaskComment.HeaderText = "Comment";
+            this.TaskComment.Name = "TaskComment";
+            this.TaskComment.Width = 76;
             // 
             // Form1
             // 
@@ -231,10 +293,12 @@ namespace CheckMoodle
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.ResumeLayout(false);
 
@@ -256,6 +320,12 @@ namespace CheckMoodle
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Button back;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Perfect;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TaskName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TaskScore;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MaxScore;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TaskComment;
     }
 }
 
