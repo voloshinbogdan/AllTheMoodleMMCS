@@ -37,7 +37,8 @@ namespace CheckMoodle
 
         IIDE IDE;
         IWebDriver webdriver;
-        private Process _processWebdriver;
+        private ClosableProcess _processWebdriver;
+        private Process _processChrome;
 
         List<string> Args;
         string html;
@@ -154,6 +155,8 @@ namespace CheckMoodle
 
                 var options = new ChromeOptions();
                 options.AddExcludedArgument("enable-automation");
+
+                options.AddArgument("--window-position=-32000,-32000");
                 webdriver = new ChromeDriver(cService, options);
                 webdriver.Url = html.Replace("#", "%23");
                 
@@ -162,9 +165,10 @@ namespace CheckMoodle
                     Thread.Sleep(100);
                 }
                 string title = "task.html - Google Chrome";
-                _processWebdriver = Process.GetProcesses()
+                _processWebdriver = new ClosableProcess(Process.GetProcessesByName("chromedriver").FirstOrDefault());
+                _processChrome = Process.GetProcesses()
                     .FirstOrDefault(x => x.MainWindowTitle == title);
-                SetParent(_processWebdriver.MainWindowHandle, panel2.Handle);
+                SetParent(_processChrome.MainWindowHandle, panel2.Handle);
                 panel2_Resize(null, null);
 
             }
@@ -177,8 +181,8 @@ namespace CheckMoodle
         }
         private void panel2_Resize(object sender, EventArgs e)
         {
-            if (_processWebdriver.MainWindowHandle != null)
-                MoveWindow(_processWebdriver.MainWindowHandle, 0, -50, panel2.Width, panel2.Height + 50, true);
+            if (_processChrome.MainWindowHandle != null)
+                MoveWindow(_processChrome.MainWindowHandle, 0, -50, panel2.Width, panel2.Height + 50, true);
         }
 
         private void back_Click(object sender, EventArgs e)  //+
@@ -336,7 +340,7 @@ namespace CheckMoodle
                 using (Graphics graphics = dataGridView1.CreateGraphics())
                 {
                     SizeF size = graphics.MeasureString(rtb.Text, dataGridView1.Font);
-                    dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Height = Math.Max((int)(size.Height * 1.1) + 5, minRawHeight);
+                    dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Height = Math.Max((int)(size.Height * 1.05) + 5, minRawHeight);
                     dataGridView1.Columns[dataGridView1.CurrentCell.ColumnIndex].Width = Math.Max((int)size.Width + 5, minColumnWidthComment);
                 }
             }
