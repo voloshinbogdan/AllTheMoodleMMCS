@@ -45,6 +45,10 @@ namespace CheckMoodle
         int prevSubInd = -1;
         private double max_score = -1;
 
+        // Table variables
+        private int minColumnWidthComment = -1;
+        private int minRawHeight = -1;
+
         public Form1()
         {
             InitializeComponent();
@@ -53,6 +57,12 @@ namespace CheckMoodle
         public Form1(string[] args)
         {
             InitializeComponent();
+            
+            // Table Setup
+            dataGridView1.Columns["TaskComment"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            minColumnWidthComment = dataGridView1.Columns["TaskComment"].Width;
+            minRawHeight = dataGridView1.RowTemplate.Height;
+
 
             string working_dir = "";
             string ide_code = "";
@@ -263,10 +273,34 @@ namespace CheckMoodle
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            IDE.Quit();
-            //webdriver.Close();
-            webdriver.Quit();
-            webdriver.Dispose();
+            try
+            {
+                IDE.Quit();
+
+            }
+            catch (Exception)
+            {
+            }
+
+            try
+            {
+                webdriver.Quit();
+
+            }
+            catch (Exception)
+            {
+
+            }
+
+            try
+            {
+                webdriver.Dispose();
+
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -292,6 +326,41 @@ namespace CheckMoodle
         private void Form1_Move(object sender, EventArgs e)
         {
             IDEResize(IDE?.GetProcess());
+        }
+
+        private void Rtb_AdjustRowSize(object sender, EventArgs e)
+        {
+            RichTextBox rtb = sender as RichTextBox;
+            if (rtb != null && dataGridView1.CurrentCell != null)
+            {
+                using (Graphics graphics = dataGridView1.CreateGraphics())
+                {
+                    SizeF size = graphics.MeasureString(rtb.Text, dataGridView1.Font);
+                    dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Height = Math.Max((int)(size.Height * 1.1) + 5, minRawHeight);
+                    dataGridView1.Columns[dataGridView1.CurrentCell.ColumnIndex].Width = Math.Max((int)size.Width + 5, minColumnWidthComment);
+                }
+            }
+        }
+
+        private void dataGridView_CellBeginEdit(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (dataGridView1.CurrentCell.ColumnIndex == dataGridView1.Columns["TaskComment"].Index &&
+                e.Control is DataGridViewRichTextBoxEditingControl)
+            {
+                DataGridViewRichTextBoxEditingControl rtb = e.Control as DataGridViewRichTextBoxEditingControl;
+                rtb.AdjustRowHeight += Rtb_AdjustRowSize;
+            }
+
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["TaskComment"].Index &&
+                dataGridView1.EditingControl is DataGridViewRichTextBoxEditingControl)
+            {
+                DataGridViewRichTextBoxEditingControl rtb = dataGridView1.EditingControl as DataGridViewRichTextBoxEditingControl;
+                rtb.AdjustRowHeight -= Rtb_AdjustRowSize;
+            }
         }
     }
 }

@@ -36,7 +36,13 @@ namespace CheckMoodle
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.generateFromTable = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Perfect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.TaskName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TaskScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MaxScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TaskComment = new CheckMoodle.DataGridViewRichTextBoxColumn();
             this.maxScL = new System.Windows.Forms.Label();
             this.addMoss = new System.Windows.Forms.Button();
             this.moss = new System.Windows.Forms.LinkLabel();
@@ -47,11 +53,7 @@ namespace CheckMoodle
             this.Save = new System.Windows.Forms.Button();
             this.back = new System.Windows.Forms.Button();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.Perfect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.TaskName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TaskScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MaxScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TaskComment = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewRichTextBoxColumn1 = new CheckMoodle.DataGridViewRichTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.scoreError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -107,6 +109,7 @@ namespace CheckMoodle
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.Controls.Add(this.generateFromTable);
             this.splitContainer3.Panel1.Controls.Add(this.dataGridView1);
             // 
             // splitContainer3.Panel2
@@ -121,11 +124,25 @@ namespace CheckMoodle
             this.splitContainer3.Panel2.Controls.Add(this.Save);
             this.splitContainer3.Panel2.Controls.Add(this.back);
             this.splitContainer3.Size = new System.Drawing.Size(534, 167);
-            this.splitContainer3.SplitterDistance = 322;
+            this.splitContainer3.SplitterDistance = 266;
             this.splitContainer3.TabIndex = 0;
+            // 
+            // generateFromTable
+            // 
+            this.generateFromTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.generateFromTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.generateFromTable.Location = new System.Drawing.Point(222, 11);
+            this.generateFromTable.Name = "generateFromTable";
+            this.generateFromTable.Size = new System.Drawing.Size(40, 40);
+            this.generateFromTable.TabIndex = 1;
+            this.generateFromTable.Text = "✍️";
+            this.generateFromTable.UseVisualStyleBackColor = true;
             // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Perfect,
@@ -133,113 +150,13 @@ namespace CheckMoodle
             this.TaskScore,
             this.MaxScore,
             this.TaskComment});
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Location = new System.Drawing.Point(13, 11);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(322, 167);
+            this.dataGridView1.RowHeadersWidth = 25;
+            this.dataGridView1.Size = new System.Drawing.Size(203, 150);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // maxScL
-            // 
-            this.maxScL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.maxScL.AutoSize = true;
-            this.maxScL.Location = new System.Drawing.Point(131, 11);
-            this.maxScL.Name = "maxScL";
-            this.maxScL.Size = new System.Drawing.Size(0, 13);
-            this.maxScL.TabIndex = 13;
-            // 
-            // addMoss
-            // 
-            this.addMoss.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addMoss.Location = new System.Drawing.Point(-1, 5);
-            this.addMoss.Name = "addMoss";
-            this.addMoss.Size = new System.Drawing.Size(18, 23);
-            this.addMoss.TabIndex = 12;
-            this.addMoss.Text = "ᒣ";
-            this.addMoss.UseVisualStyleBackColor = true;
-            this.addMoss.Click += new System.EventHandler(this.addMoss_Click);
-            // 
-            // moss
-            // 
-            this.moss.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.moss.AutoSize = true;
-            this.moss.Location = new System.Drawing.Point(-39, 8);
-            this.moss.Name = "moss";
-            this.moss.Size = new System.Drawing.Size(31, 13);
-            this.moss.TabIndex = 7;
-            this.moss.TabStop = true;
-            this.moss.Text = "moss";
-            this.moss.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.moss_LinkClicked);
-            // 
-            // SaveB
-            // 
-            this.SaveB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveB.Location = new System.Drawing.Point(131, 113);
-            this.SaveB.Name = "SaveB";
-            this.SaveB.Size = new System.Drawing.Size(72, 23);
-            this.SaveB.TabIndex = 11;
-            this.SaveB.Text = "💾";
-            this.SaveB.UseVisualStyleBackColor = true;
-            this.SaveB.Click += new System.EventHandler(this.SaveB_Click);
-            // 
-            // score
-            // 
-            this.score.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.score.Location = new System.Drawing.Point(68, 8);
-            this.score.Name = "score";
-            this.score.Size = new System.Drawing.Size(57, 20);
-            this.score.TabIndex = 1;
-            this.score.Validating += new System.ComponentModel.CancelEventHandler(this.score_Validating);
-            this.score.Validated += new System.EventHandler(this.score_Validated);
-            // 
-            // comment
-            // 
-            this.comment.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comment.Location = new System.Drawing.Point(3, 34);
-            this.comment.Name = "comment";
-            this.comment.Size = new System.Drawing.Size(202, 75);
-            this.comment.TabIndex = 2;
-            this.comment.Text = "";
-            // 
-            // Submissions
-            // 
-            this.Submissions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Submissions.FormattingEnabled = true;
-            this.Submissions.Location = new System.Drawing.Point(3, 138);
-            this.Submissions.Name = "Submissions";
-            this.Submissions.Size = new System.Drawing.Size(200, 21);
-            this.Submissions.TabIndex = 9;
-            this.Submissions.SelectedIndexChanged += new System.EventHandler(this.Submissions_SelectedIndexChanged);
-            // 
-            // Save
-            // 
-            this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(68, 113);
-            this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(57, 23);
-            this.Save.TabIndex = 3;
-            this.Save.Text = "►";
-            this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // back
-            // 
-            this.back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.back.Location = new System.Drawing.Point(6, 113);
-            this.back.Name = "back";
-            this.back.Size = new System.Drawing.Size(56, 23);
-            this.back.TabIndex = 8;
-            this.back.Text = "◄";
-            this.back.UseVisualStyleBackColor = true;
-            this.back.Click += new System.EventHandler(this.back_Click);
-            // 
-            // fileSystemWatcher1
-            // 
-            this.fileSystemWatcher1.EnableRaisingEvents = true;
-            this.fileSystemWatcher1.SynchronizingObject = this;
+            this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
+            this.dataGridView1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_CellBeginEdit);
             // 
             // Perfect
             // 
@@ -271,10 +188,116 @@ namespace CheckMoodle
             // 
             // TaskComment
             // 
-            this.TaskComment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.TaskComment.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.TaskComment.HeaderText = "Comment";
             this.TaskComment.Name = "TaskComment";
-            this.TaskComment.Width = 76;
+            this.TaskComment.Width = 57;
+            // 
+            // maxScL
+            // 
+            this.maxScL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.maxScL.AutoSize = true;
+            this.maxScL.Location = new System.Drawing.Point(227, 11);
+            this.maxScL.Name = "maxScL";
+            this.maxScL.Size = new System.Drawing.Size(0, 13);
+            this.maxScL.TabIndex = 13;
+            // 
+            // addMoss
+            // 
+            this.addMoss.Location = new System.Drawing.Point(49, 5);
+            this.addMoss.Name = "addMoss";
+            this.addMoss.Size = new System.Drawing.Size(18, 23);
+            this.addMoss.TabIndex = 12;
+            this.addMoss.Text = "ᒣ";
+            this.addMoss.UseVisualStyleBackColor = true;
+            this.addMoss.Click += new System.EventHandler(this.addMoss_Click);
+            // 
+            // moss
+            // 
+            this.moss.AutoSize = true;
+            this.moss.Location = new System.Drawing.Point(11, 8);
+            this.moss.Name = "moss";
+            this.moss.Size = new System.Drawing.Size(31, 13);
+            this.moss.TabIndex = 7;
+            this.moss.TabStop = true;
+            this.moss.Text = "moss";
+            this.moss.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.moss_LinkClicked);
+            // 
+            // SaveB
+            // 
+            this.SaveB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SaveB.Location = new System.Drawing.Point(187, 113);
+            this.SaveB.Name = "SaveB";
+            this.SaveB.Size = new System.Drawing.Size(72, 23);
+            this.SaveB.TabIndex = 11;
+            this.SaveB.Text = "💾";
+            this.SaveB.UseVisualStyleBackColor = true;
+            this.SaveB.Click += new System.EventHandler(this.SaveB_Click);
+            // 
+            // score
+            // 
+            this.score.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.score.Location = new System.Drawing.Point(176, 7);
+            this.score.Name = "score";
+            this.score.Size = new System.Drawing.Size(45, 20);
+            this.score.TabIndex = 1;
+            this.score.Validating += new System.ComponentModel.CancelEventHandler(this.score_Validating);
+            this.score.Validated += new System.EventHandler(this.score_Validated);
+            // 
+            // comment
+            // 
+            this.comment.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comment.Location = new System.Drawing.Point(3, 34);
+            this.comment.Name = "comment";
+            this.comment.Size = new System.Drawing.Size(258, 75);
+            this.comment.TabIndex = 2;
+            this.comment.Text = "";
+            // 
+            // Submissions
+            // 
+            this.Submissions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Submissions.FormattingEnabled = true;
+            this.Submissions.Location = new System.Drawing.Point(3, 138);
+            this.Submissions.Name = "Submissions";
+            this.Submissions.Size = new System.Drawing.Size(256, 21);
+            this.Submissions.TabIndex = 9;
+            this.Submissions.SelectedIndexChanged += new System.EventHandler(this.Submissions_SelectedIndexChanged);
+            // 
+            // Save
+            // 
+            this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Save.Location = new System.Drawing.Point(124, 113);
+            this.Save.Name = "Save";
+            this.Save.Size = new System.Drawing.Size(57, 23);
+            this.Save.TabIndex = 3;
+            this.Save.Text = "►";
+            this.Save.UseVisualStyleBackColor = true;
+            this.Save.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // back
+            // 
+            this.back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.back.Location = new System.Drawing.Point(62, 113);
+            this.back.Name = "back";
+            this.back.Size = new System.Drawing.Size(56, 23);
+            this.back.TabIndex = 8;
+            this.back.Text = "◄";
+            this.back.UseVisualStyleBackColor = true;
+            this.back.Click += new System.EventHandler(this.back_Click);
+            // 
+            // fileSystemWatcher1
+            // 
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
+            // dataGridViewRichTextBoxColumn1
+            // 
+            this.dataGridViewRichTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewRichTextBoxColumn1.HeaderText = "Comment";
+            this.dataGridViewRichTextBoxColumn1.Name = "dataGridViewRichTextBoxColumn1";
             // 
             // Form1
             // 
@@ -321,11 +344,13 @@ namespace CheckMoodle
         private System.Windows.Forms.Button back;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button generateFromTable;
+        private DataGridViewRichTextBoxColumn dataGridViewRichTextBoxColumn1;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Perfect;
         private System.Windows.Forms.DataGridViewTextBoxColumn TaskName;
         private System.Windows.Forms.DataGridViewTextBoxColumn TaskScore;
         private System.Windows.Forms.DataGridViewTextBoxColumn MaxScore;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TaskComment;
+        private DataGridViewRichTextBoxColumn TaskComment;
     }
 }
 
