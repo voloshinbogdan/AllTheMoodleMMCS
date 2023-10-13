@@ -13,7 +13,7 @@ namespace CheckMoodle
     public class VSAPI: IIDE
     {
         private EnvDTE.DTE vsDTE;
-        private Process proc;
+        private ClosableProcess proc;
         private Action<Process> ConfigureApp;
 
         public VSAPI(string version, string Params = "", Action<Process> ConfigureApp = null)
@@ -24,6 +24,7 @@ namespace CheckMoodle
             string installationPath = setupInstance.GetInstallationPath();
             string executablePath = Path.Combine(installationPath, @"Common7\IDE\devenv.exe");
             Process vsProcess = Process.Start(executablePath, Params);
+            proc = new ClosableProcess(vsProcess);
             string runningObjectDisplayName = $"VisualStudio.DTE.{version}.0:{vsProcess.Id}";
 
             IEnumerable<string> runningObjectDisplayNames = null;
@@ -42,9 +43,8 @@ namespace CheckMoodle
                 if (runningObject != null)
                 {
                     vsDTE = (EnvDTE.DTE)runningObject;
-                    proc = vsProcess;
                     if (ConfigureApp != null)
-                        ConfigureApp(proc);
+                        ConfigureApp(proc.p);
                     return;
                 }
 
@@ -56,7 +56,7 @@ namespace CheckMoodle
 
         public override Process GetProcess()
         {
-            return proc;
+            return proc.p;
         }
 
         public override void Show(string path)
@@ -80,17 +80,12 @@ namespace CheckMoodle
                 
 
             if (ConfigureApp != null)
-                ConfigureApp(proc);
+                ConfigureApp(proc.p);
         }
 
         public override void Quit()
         {
             vsDTE.Quit();
-            if (!proc.HasExited)
-            {
-                proc.Kill();
-                proc.Close();
-            }
         }
 
         private static object GetRunningObject(string displayName, out IEnumerable<string> runningObjectDisplayNames)
