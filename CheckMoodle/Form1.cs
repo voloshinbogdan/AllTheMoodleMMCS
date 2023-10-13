@@ -46,6 +46,26 @@ namespace CheckMoodle
         int prevSubInd = -1;
         private double max_score = -1;
 
+        const int GWL_STYLE = -16;
+        const int WS_BORDER = 0x0080000;
+        const int WS_CAPTION = 0x00C0000;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        public static void MakeProcessWindowBorderless(Process process)
+        {
+            if (process != null)
+            {
+                IntPtr hwnd = process.MainWindowHandle;
+                int style = GetWindowLong(hwnd, GWL_STYLE);
+                SetWindowLong(hwnd, GWL_STYLE, (style & ~WS_BORDER & ~WS_CAPTION));
+            }
+        }
+
         // Table variables
         private int minColumnWidthComment = -1;
         private int minRawHeight = -1;
@@ -169,6 +189,7 @@ namespace CheckMoodle
                 _processChrome = Process.GetProcesses()
                     .FirstOrDefault(x => x.MainWindowTitle == title);
                 SetParent(_processChrome.MainWindowHandle, panel2.Handle);
+                MakeProcessWindowBorderless(_processChrome);
                 panel2_Resize(null, null);
 
             }
