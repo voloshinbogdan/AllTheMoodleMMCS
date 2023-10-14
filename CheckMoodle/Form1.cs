@@ -37,8 +37,8 @@ namespace CheckMoodle
 
         IIDE IDE;
         IWebDriver webdriver;
-        private ClosableProcess _processWebdriver;
-        private Process _processChrome;
+        private Process _processWebdriver;
+        private ClosableProcess _processChrome;
 
         List<string> Args;
         string html;
@@ -47,6 +47,9 @@ namespace CheckMoodle
         private double max_score = -1;
 
         const int GWL_STYLE = -16;
+        const int GWL_EXSTYLE = -20;
+        const int WS_EX_APPWINDOW = 0x00040000;
+        const int WS_EX_TOOLWINDOW = 0x00000080;
         const int WS_BORDER = 0x0080000;
         const int WS_CAPTION = 0x00C0000;
 
@@ -167,6 +170,9 @@ namespace CheckMoodle
                     throw new ArgumentException("No such IDE " + ide_code);
 
             }
+            int windowStyle = GetWindowLong(IDE.GetProcess().MainWindowHandle, GWL_EXSTYLE);
+            SetWindowLong(IDE.GetProcess().MainWindowHandle, GWL_EXSTYLE, (windowStyle | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW);
+
 
             {
 
@@ -185,11 +191,11 @@ namespace CheckMoodle
                     Thread.Sleep(100);
                 }
                 string title = "task.html - Google Chrome";
-                _processWebdriver = new ClosableProcess(Process.GetProcessesByName("chromedriver").FirstOrDefault());
-                _processChrome = Process.GetProcesses()
-                    .FirstOrDefault(x => x.MainWindowTitle == title);
-                SetParent(_processChrome.MainWindowHandle, panel2.Handle);
-                MakeProcessWindowBorderless(_processChrome);
+                _processWebdriver = Process.GetProcessesByName("chromedriver").FirstOrDefault();
+                _processChrome = new ClosableProcess(Process.GetProcesses()
+                    .FirstOrDefault(x => x.MainWindowTitle == title));
+                SetParent(_processChrome.p.MainWindowHandle, panel2.Handle);
+                MakeProcessWindowBorderless(_processChrome.p);
                 panel2_Resize(null, null);
 
             }
@@ -202,8 +208,8 @@ namespace CheckMoodle
         }
         private void panel2_Resize(object sender, EventArgs e)
         {
-            if (_processChrome.MainWindowHandle != null)
-                MoveWindow(_processChrome.MainWindowHandle, 0, -50, panel2.Width, panel2.Height + 50, true);
+            if (_processChrome.p.MainWindowHandle != null)
+                MoveWindow(_processChrome.p.MainWindowHandle, 0, -50, panel2.Width, panel2.Height + 50, true);
         }
 
         private void back_Click(object sender, EventArgs e)  //+

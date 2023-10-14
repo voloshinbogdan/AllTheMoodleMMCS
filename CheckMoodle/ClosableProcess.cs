@@ -31,6 +31,13 @@ namespace CheckMoodle
         {
             this.p = p;
 
+            p.EnableRaisingEvents = true;
+            p.Exited += (sender, e) =>
+            {
+                Environment.Exit(0); // Exit the main process
+            };
+
+
             _jobHandle = CreateJobObject(IntPtr.Zero, null);
 
             var info = new JOBOBJECT_BASIC_LIMIT_INFORMATION
