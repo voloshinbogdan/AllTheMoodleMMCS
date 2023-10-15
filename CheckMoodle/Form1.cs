@@ -21,20 +21,28 @@ namespace CheckMoodle
     {
 
         // WIN32
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
+        [DllImport("user32.dll")]
+        static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
+        [DllImport("user32.dll")]
+        static extern bool UnhookWinEvent(IntPtr hWinEventHook);
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-
-        private const int SW_SHOWMAXIMIZED = 3;
-        private const int SW_SHOWMINIMIZED = 3;
-
-        private const uint WM_SYSCOMMAND = 0x0112;
-
         [DllImport("user32.dll")]
         static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
         [DllImport("user32.dll")]
         static extern bool PostMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
         // <-WIN32
 
+        private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
         IIDE IDE;
         IWebDriver webdriver;
         private Process _processWebdriver;
@@ -44,20 +52,28 @@ namespace CheckMoodle
         string html;
         string mossURL;
         int prevSubInd = -1;
-        private double max_score = -1;
+        private double maxScore = -1;
 
+        private const int SW_SHOWMAXIMIZED = 3;
+        private const int SW_SHOWMINIMIZED = 3;
+        private const uint WM_SYSCOMMAND = 0x0112;
         const int GWL_STYLE = -16;
         const int GWL_EXSTYLE = -20;
         const int WS_EX_APPWINDOW = 0x00040000;
         const int WS_EX_TOOLWINDOW = 0x00000080;
         const int WS_BORDER = 0x0080000;
         const int WS_CAPTION = 0x00C0000;
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll")]
-        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        const uint SWP_NOMOVE = 0x0002;
+        const uint SWP_NOSIZE = 0x0001;
+        static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+        static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+        static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private const uint SWP_NOACTIVATE = 0x0010;
+        const uint EVENT_SYSTEM_FOREGROUND = 3;
+        const uint WINEVENT_OUTOFCONTEXT = 0;
+        private IntPtr IDEForegroundHookId;
+        private IntPtr ChromeForegroundHookId;
+        private WinEventDelegate IDEEventDelegate;
 
         public static void MakeProcessWindowBorderless(Process process)
         {
@@ -87,7 +103,7 @@ namespace CheckMoodle
             minColumnWidthComment = dataGridView1.Columns["TaskComment"].Width;
             minRawHeight = dataGridView1.RowTemplate.Height;
 
-
+            // Parsing command line arguments
             string working_dir = "";
             string ide_code = "";
             if (args.Length == 1)
@@ -99,26 +115,28 @@ namespace CheckMoodle
                     var cfgt = File.ReadAllText(cfg_path);
                     dynamic cfg = JsonConvert.DeserializeObject(cfgt);
                     ide_code = cfg.IDE;
-                    max_score = cfg.max_score;
+                    maxScore = cfg.max_score;
                 }
             }
             else if (args.Length == 3)
             {
                 working_dir = args[0];
                 ide_code = args[1];
-                max_score = double.Parse(args[2].Replace('.', ','));
+                maxScore = double.Parse(args[2].Replace('.', ','));
             }
             else
                 throw new ArgumentException("Should be 3 parameters (path to folder, IDE, max score) or 1 (path to folder but with json");
 
-            maxScL.Text = "/" + max_score;
+            maxScL.Text = "/" + maxScore;
             html = Path.Combine(working_dir, "task.html");
 
+            // Read config
             var t = File.ReadAllText("config.json");
             dynamic config = JsonConvert.DeserializeObject(t);
             Args = Directory.GetDirectories(working_dir).Where(s => s.Contains("assignsubmission_file")).ToList();
             Submissions.Items.AddRange(Args.Select(s => new DirectoryInfo(s).Name).ToArray());
 
+            // Choose, load and configure IDE window
             switch (ide_code)
             {
                 case "vsc":
@@ -172,10 +190,13 @@ namespace CheckMoodle
             }
             int windowStyle = GetWindowLong(IDE.GetProcess().MainWindowHandle, GWL_EXSTYLE);
             SetWindowLong(IDE.GetProcess().MainWindowHandle, GWL_EXSTYLE, (windowStyle | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW);
+            IDEEventDelegate = new WinEventDelegate(HandleWinEvent);
+            IDEForegroundHookId = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, IDEEventDelegate,
+                (uint)IDE.GetProcess().Id, 0, WINEVENT_OUTOFCONTEXT);
 
 
+            // Loading task file
             {
-
                 var cService = ChromeDriverService.CreateDefaultService();
                 cService.HideCommandPromptWindow = true;
 
@@ -196,10 +217,33 @@ namespace CheckMoodle
                     .FirstOrDefault(x => x.MainWindowTitle == title));
                 SetParent(_processChrome.p.MainWindowHandle, panel2.Handle);
                 MakeProcessWindowBorderless(_processChrome.p);
+                ChromeForegroundHookId = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, IDEEventDelegate,
+                    (uint)_processChrome.p.Id, 0, WINEVENT_OUTOFCONTEXT);
                 panel2_Resize(null, null);
 
             }
+
             Submissions.SelectedIndex = 0;
+        }
+        private void HandleWinEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            if (hwnd == IDE.GetProcess().MainWindowHandle)
+            {
+                this.Invoke((Action)(() =>
+                {
+                    // First, set the main window as topmost
+                    SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+                    // Immediately after, remove the topmost status from the main window
+                    SetWindowPos(this.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+                }));
+            }
+            else if (hwnd == _processChrome.p.MainWindowHandle)
+            {
+                this.Invoke((Action)(() =>
+                {
+                    SetForegroundWindow(this.Handle);
+                }));
+            }
         }
 
         private void button1_Click(object sender, EventArgs e) //+
@@ -278,11 +322,11 @@ namespace CheckMoodle
         private void score_Validating(object sender, CancelEventArgs e) //+
         {
             double r;
-            if (score.Text == "" || double.TryParse(score.Text.Replace(".", ","), out r) && r >= 0 && r <= max_score)
+            if (score.Text == "" || double.TryParse(score.Text.Replace(".", ","), out r) && r >= 0 && r <= maxScore)
                 return;
 
             e.Cancel = true;
-            scoreError.SetError(score, "Shoould be real number R(0 <= R <= " + max_score + ")");
+            scoreError.SetError(score, "Shoould be real number R(0 <= R <= " + maxScore + ")");
             
         }
 
@@ -304,6 +348,14 @@ namespace CheckMoodle
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            try
+            {
+                UnhookWinEvent(IDEForegroundHookId);
+            }
+            catch (Exception)
+            {
+            }
+
             try
             {
                 IDE.Quit();
@@ -351,7 +403,11 @@ namespace CheckMoodle
         private void IDEResize(Process p)
         {
             if (p?.MainWindowHandle != null)
-                MoveWindow(p.MainWindowHandle, 0, this.Top, this.Left + 20, this.Height, true);
+            {
+                MoveWindow(p.MainWindowHandle, 0, this.Top, this.Left + 10, this.Height, true);
+                SetWindowPos(p.MainWindowHandle, this.Handle, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+
+            }
         }
 
         private void Form1_Move(object sender, EventArgs e)
@@ -392,6 +448,25 @@ namespace CheckMoodle
                 DataGridViewRichTextBoxEditingControl rtb = dataGridView1.EditingControl as DataGridViewRichTextBoxEditingControl;
                 rtb.AdjustRowHeight -= Rtb_AdjustRowSize;
             }
+        }
+
+        private void justifyScores_Click(object sender, EventArgs e)
+        {
+            var oneTaskScore = Math.Round(maxScore / dataGridView1.Rows.Count, 3);
+
+            var maxScoreI = dataGridView1.Columns["MaxScore"].Index;
+
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                var row = dataGridView1.Rows[i];
+                row.Cells[maxScoreI].Value = oneTaskScore.ToString();
+            }
+            
+        }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            IDEResize(IDE.GetProcess());
         }
     }
 }

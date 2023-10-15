@@ -36,6 +36,7 @@ namespace CheckMoodle
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.justifyScores = new System.Windows.Forms.Button();
             this.generateFromTable = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Perfect = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -109,6 +110,7 @@ namespace CheckMoodle
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.Controls.Add(this.justifyScores);
             this.splitContainer3.Panel1.Controls.Add(this.generateFromTable);
             this.splitContainer3.Panel1.Controls.Add(this.dataGridView1);
             // 
@@ -126,6 +128,17 @@ namespace CheckMoodle
             this.splitContainer3.Size = new System.Drawing.Size(534, 167);
             this.splitContainer3.SplitterDistance = 266;
             this.splitContainer3.TabIndex = 0;
+            // 
+            // justifyScores
+            // 
+            this.justifyScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.justifyScores.Location = new System.Drawing.Point(223, 58);
+            this.justifyScores.Name = "justifyScores";
+            this.justifyScores.Size = new System.Drawing.Size(39, 23);
+            this.justifyScores.TabIndex = 2;
+            this.justifyScores.Text = "≡";
+            this.justifyScores.UseVisualStyleBackColor = true;
+            this.justifyScores.Click += new System.EventHandler(this.justifyScores_Click);
             // 
             // generateFromTable
             // 
@@ -307,6 +320,7 @@ namespace CheckMoodle
             this.Controls.Add(this.splitContainer2);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Activated += new System.EventHandler(this.Form1_Activated);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Move += new System.EventHandler(this.Form1_Move);
             this.Resize += new System.EventHandler(this.Form1_Resize);
@@ -351,6 +365,7 @@ namespace CheckMoodle
         private System.Windows.Forms.DataGridViewTextBoxColumn TaskScore;
         private System.Windows.Forms.DataGridViewTextBoxColumn MaxScore;
         private DataGridViewRichTextBoxColumn TaskComment;
+        private System.Windows.Forms.Button justifyScores;
     }
 }
 
