@@ -266,10 +266,27 @@ namespace CheckMoodle
             Submissions.SelectedIndex = (Args.Count + Submissions.SelectedIndex - 1) % Args.Count;
         }
 
+        private void ClearColumns(DataGridView dgv)
+        {
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                if (!row.IsNewRow)  // Exclude the 'new' row used for user input
+                {
+                    row.Cells["Perfect"].Value = false;               // Set to default value for bool
+                    row.Cells["TaskName"].Value = string.Empty;       // Set to empty string
+                    row.Cells["TaskScore"].Value = string.Empty;               // Set to default value for double
+                    row.Cells["TaskComment"].Value = string.Empty;    // Set to empty string
+                }
+            }
+        }
+
         public void PopulateDataGridViewFromData(DataGridView dgv, EvaluationData data)
         {
-            if (data.Tasks == null)
+            if (data.Tasks == null || data.Tasks.Count == 0)
+            {
+                ClearColumns(dataGridView1);
                 return;
+            }
 
             dgv.Rows.Clear();
             foreach (var task in data.Tasks)
@@ -277,7 +294,6 @@ namespace CheckMoodle
                 var rtf = new RichTextBox { Text = task.TaskComment };
                 int index = dgv.Rows.Add();
                 dgv.Rows[index].Cells["Perfect"].Value = task.Perfect;
-                dgv.Rows[index].Cells["TaskName"].Value = task.TaskName;
                 dgv.Rows[index].Cells["TaskScore"].Value = task.TaskScore.ToString();
                 dgv.Rows[index].Cells["MaxScore"].Value = task.MaxScore.ToString();
                 dgv.Rows[index].Cells["TaskComment"].Value = task.TaskComment == "" ? "" : rtf.Rtf;
@@ -328,6 +344,8 @@ namespace CheckMoodle
                 comment.Text = s.comment;
                 PopulateDataGridViewFromData(dataGridView1, s);
             }
+            else
+                ClearColumns(dataGridView1);
             prevSubInd = Submissions.SelectedIndex;
             this.Enabled = true;
         }
