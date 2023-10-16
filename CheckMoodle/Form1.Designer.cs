@@ -55,6 +55,8 @@ namespace CheckMoodle
             this.back = new System.Windows.Forms.Button();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.dataGridViewRichTextBoxColumn1 = new CheckMoodle.DataGridViewRichTextBoxColumn();
+            this.cellError = new System.Windows.Forms.ErrorProvider(this.components);
+            this.rowError = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.scoreError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -66,6 +68,8 @@ namespace CheckMoodle
             this.splitContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cellError)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rowError)).BeginInit();
             this.SuspendLayout();
             // 
             // scoreError
@@ -131,6 +135,7 @@ namespace CheckMoodle
             // 
             // justifyScores
             // 
+            this.justifyScores.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.justifyScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.justifyScores.Location = new System.Drawing.Point(223, 58);
             this.justifyScores.Name = "justifyScores";
@@ -169,7 +174,12 @@ namespace CheckMoodle
             this.dataGridView1.Size = new System.Drawing.Size(203, 150);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
+            this.dataGridView1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValidated);
+            this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);
             this.dataGridView1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_CellBeginEdit);
+            this.dataGridView1.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowLeave);
+            this.dataGridView1.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowValidated);
+            this.dataGridView1.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridView1_RowValidating);
             // 
             // Perfect
             // 
@@ -312,6 +322,14 @@ namespace CheckMoodle
             this.dataGridViewRichTextBoxColumn1.HeaderText = "Comment";
             this.dataGridViewRichTextBoxColumn1.Name = "dataGridViewRichTextBoxColumn1";
             // 
+            // cellError
+            // 
+            this.cellError.ContainerControl = this;
+            // 
+            // rowError
+            // 
+            this.rowError.ContainerControl = this;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -337,6 +355,8 @@ namespace CheckMoodle
             this.splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cellError)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rowError)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -366,6 +386,8 @@ namespace CheckMoodle
         private System.Windows.Forms.DataGridViewTextBoxColumn MaxScore;
         private DataGridViewRichTextBoxColumn TaskComment;
         private System.Windows.Forms.Button justifyScores;
+        private System.Windows.Forms.ErrorProvider cellError;
+        private System.Windows.Forms.ErrorProvider rowError;
     }
 }
 

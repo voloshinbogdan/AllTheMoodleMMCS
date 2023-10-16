@@ -74,6 +74,7 @@ namespace CheckMoodle
         private IntPtr IDEForegroundHookId;
         private IntPtr ChromeForegroundHookId;
         private WinEventDelegate IDEEventDelegate;
+        private bool allRowsRevalidated = true;
 
         public static void MakeProcessWindowBorderless(Process process)
         {
@@ -122,7 +123,7 @@ namespace CheckMoodle
             {
                 working_dir = args[0];
                 ide_code = args[1];
-                maxScore = double.Parse(args[2].Replace('.', ','));
+                maxScore = ParseScore(args[2]);
             }
             else
                 throw new ArgumentException("Should be 3 parameters (path to folder, IDE, max score) or 1 (path to folder but with json");
@@ -240,7 +241,7 @@ namespace CheckMoodle
             else if (hwnd == _processChrome.p.MainWindowHandle)
             {
                 this.Invoke((Action)(() =>
-                {
+                {   
                     SetForegroundWindow(this.Handle);
                 }));
             }
@@ -322,11 +323,11 @@ namespace CheckMoodle
         private void score_Validating(object sender, CancelEventArgs e) //+
         {
             double r;
-            if (score.Text == "" || double.TryParse(score.Text.Replace(".", ","), out r) && r >= 0 && r <= maxScore)
+            if (CheckIsValidScore(score.Text, maxScore))
                 return;
 
             e.Cancel = true;
-            scoreError.SetError(score, "Shoould be real number R(0 <= R <= " + maxScore + ")");
+            scoreError.SetError(score, "Should be real number R(0 <= R <= " + maxScore + ")");
             
         }
 
@@ -452,7 +453,9 @@ namespace CheckMoodle
 
         private void justifyScores_Click(object sender, EventArgs e)
         {
-            var oneTaskScore = Math.Round(maxScore / dataGridView1.Rows.Count, 3);
+            if (dataGridView1.Rows.Count == 1)
+                return;
+            var oneTaskScore = Math.Round(maxScore / (dataGridView1.Rows.Count - 1), 3);
 
             var maxScoreI = dataGridView1.Columns["MaxScore"].Index;
 
@@ -461,12 +464,125 @@ namespace CheckMoodle
                 var row = dataGridView1.Rows[i];
                 row.Cells[maxScoreI].Value = oneTaskScore.ToString();
             }
-            
+            allRowsRevalidated = false;
+            RevalidateRows();
+
+        }
+
+        private void RevalidateRows()
+        {
+            // Revalidate rows
+            var cell = dataGridView1.CurrentCell;
+            var scoreColumnI = dataGridView1.Columns["TaskScore"].Index;
+            dataGridView1.CurrentCell = dataGridView1[scoreColumnI, dataGridView1.CurrentCell.RowIndex];
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                // Go to row
+                try
+                {
+                    // dirty trick to prevent recursive looping
+                    allRowsRevalidated = true;
+                    dataGridView1.CurrentCell = dataGridView1[scoreColumnI, i]; // Set the current cell
+                    allRowsRevalidated = false;
+
+                }
+                catch (Exception e)
+                {
+                    allRowsRevalidated = false;
+                    // If can't then validation failed
+                    dataGridView1.BeginEdit(true);
+                    return;
+                }
+            }
+            allRowsRevalidated = true;
+            dataGridView1.CurrentCell = cell;
         }
 
         private void Form1_Activated(object sender, EventArgs e)
         {
             IDEResize(IDE.GetProcess());
+        }
+
+        private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["MaxScore"].Index)
+            {
+                if (CheckIsValidScore((string)e.FormattedValue))
+                    return;
+                cellError.SetError(dataGridView1, "Should be real number R(R >= 0)");
+
+                e.Cancel = true;
+            }
+            else if (e.ColumnIndex == dataGridView1.Columns["TaskScore"].Index)
+            {
+                string maxScoreStr = (string)dataGridView1[dataGridView1.Columns["MaxScore"].Index, e.RowIndex].Value;
+                double maxScore = -1;
+                string errMessage = "Should be real number R(R >= 0)";
+                if (!string.IsNullOrEmpty(maxScoreStr) && string.IsNullOrEmpty(rowError.GetError(dataGridView1)))
+                {
+                    maxScore = ParseScore(maxScoreStr);
+                    errMessage = "Should be real number R(0 <= R <= " + maxScore + ")";
+                }
+                if (CheckIsValidScore((string)e.FormattedValue, maxScore))
+                    return;
+                cellError.SetError(dataGridView1, errMessage);
+
+                e.Cancel = true;
+            }
+            
+        }
+
+        private double ParseScore(string text)
+        {
+            return double.Parse(text.Replace(".", ","));
+        }
+
+        private bool TryParseScore(string text, out double r)
+        {
+            r = 0;
+            return text != null && double.TryParse(text.Replace(".", ","), out r);
+        }
+
+        private bool CheckIsValidScore(string text, double maxValue = -1)
+        {
+            if (string.IsNullOrEmpty(text))
+                return true;
+            bool isNum = TryParseScore(text, out var r);
+            bool lesserThanMax = maxValue == -1 || r <= maxValue;
+            return  isNum && r >= 0 && lesserThanMax;
+        }
+
+        private void dataGridView1_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            cellError.SetError(dataGridView1, "");
+        }
+
+        private void dataGridView1_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            int scoreColumn = dataGridView1.Columns["TaskScore"].Index;
+            int maxScoreColumn = dataGridView1.Columns["MaxScore"].Index;
+            string maxScoreStr = (string)dataGridView1[maxScoreColumn, e.RowIndex].Value;
+            if (string.IsNullOrEmpty(maxScoreStr))
+                return;
+            double maxScore = ParseScore(maxScoreStr);
+            if (CheckIsValidScore((string)dataGridView1[scoreColumn, e.RowIndex].Value, maxScore))
+                return;
+
+            rowError.SetError(dataGridView1, $"Max score for task in row {e.RowIndex} should be greater than score");
+
+            e.Cancel = true;
+        }
+
+        private void dataGridView1_RowValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            rowError.SetError(dataGridView1, "");
+        }
+
+        private void dataGridView1_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!allRowsRevalidated)
+                RevalidateRows();
+
         }
     }
 }
