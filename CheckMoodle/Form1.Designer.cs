@@ -57,6 +57,7 @@ namespace CheckMoodle
             this.dataGridViewRichTextBoxColumn1 = new CheckMoodle.DataGridViewRichTextBoxColumn();
             this.cellError = new System.Windows.Forms.ErrorProvider(this.components);
             this.rowError = new System.Windows.Forms.ErrorProvider(this.components);
+            this.tableToCommentError = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.scoreError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -70,6 +71,7 @@ namespace CheckMoodle
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cellError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rowError)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tableToCommentError)).BeginInit();
             this.SuspendLayout();
             // 
             // scoreError
@@ -151,10 +153,11 @@ namespace CheckMoodle
             this.generateFromTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.generateFromTable.Location = new System.Drawing.Point(222, 11);
             this.generateFromTable.Name = "generateFromTable";
-            this.generateFromTable.Size = new System.Drawing.Size(40, 40);
+            this.generateFromTable.Size = new System.Drawing.Size(29, 40);
             this.generateFromTable.TabIndex = 1;
             this.generateFromTable.Text = "✍️";
             this.generateFromTable.UseVisualStyleBackColor = true;
+            this.generateFromTable.Click += new System.EventHandler(this.generateFromTable_Click);
             // 
             // dataGridView1
             // 
@@ -176,6 +179,7 @@ namespace CheckMoodle
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValidated);
             this.dataGridView1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridView1_CellValidating);
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_CellBeginEdit);
             this.dataGridView1.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowLeave);
             this.dataGridView1.RowValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_RowValidated);
@@ -330,6 +334,10 @@ namespace CheckMoodle
             // 
             this.rowError.ContainerControl = this;
             // 
+            // tableToCommentError
+            // 
+            this.tableToCommentError.ContainerControl = this;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -357,6 +365,7 @@ namespace CheckMoodle
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cellError)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rowError)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tableToCommentError)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -388,6 +397,7 @@ namespace CheckMoodle
         private System.Windows.Forms.Button justifyScores;
         private System.Windows.Forms.ErrorProvider cellError;
         private System.Windows.Forms.ErrorProvider rowError;
+        private System.Windows.Forms.ErrorProvider tableToCommentError;
     }
 }
 

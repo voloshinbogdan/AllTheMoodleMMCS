@@ -584,5 +584,119 @@ namespace CheckMoodle
                 RevalidateRows();
 
         }
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            
+            if (e.RowIndex == -1 || dataGridView1.Rows[e.RowIndex].IsNewRow)
+                return;
+            if (e.ColumnIndex == 0)  // Check if CheckBox column
+            {
+                bool isChecked = Convert.ToBoolean(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value);
+                int maxScoreColI = dataGridView1.Columns["MaxScore"].Index;
+                int taskNameColI = dataGridView1.Columns["TaskName"].Index;
+                for (int i = 1; i < dataGridView1.ColumnCount; i++)
+                {
+                    if (maxScoreColI != i && taskNameColI != i)
+                    {
+                        var cell = dataGridView1.Rows[e.RowIndex].Cells[i];
+                        cell.ReadOnly = isChecked;
+                        cell.Style.BackColor = isChecked ? Color.Green : Color.White;
+                    }
+                }
+            }
+            
+        }
+
+        private void generateFromTable_Click(object sender, EventArgs e)
+        {
+
+            // Check if table filled correctly
+            string errorMessage = "";
+            double totalMaxScore = 0;
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow)
+                    continue;
+                string taskName = row.Cells["TaskName"].Value?.ToString();
+                string maxScoreText = row.Cells["MaxScore"].Value?.ToString();
+                string rowErrorMessage = "";
+                string errStart = $"Row #{row.Index}:  ";
+                if (string.IsNullOrEmpty(taskName))
+                {
+                    rowErrorMessage += errStart + "should have task name";
+                }
+                if (string.IsNullOrEmpty(maxScoreText))
+                {
+                    if (rowErrorMessage == "")
+                        rowErrorMessage += errStart;
+                    else
+                        rowErrorMessage += ", ";
+                    rowErrorMessage += "should have max score.";
+                }
+                else
+                {
+                     totalMaxScore += ParseScore(maxScoreText);
+                }
+                if (rowErrorMessage != "")
+                    errorMessage += rowErrorMessage + "\n";
+            }
+            if (Math.Round(totalMaxScore, 2) != maxScore)
+                errorMessage += $"Sum of all task max scores should be equal to {maxScore}";
+            if (errorMessage != "")
+            {
+                tableToCommentError.SetError(generateFromTable, errorMessage);
+                return;
+            }
+
+
+            double totalScore = 0;
+            string aggregatedComments = "";
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow)
+                    continue;
+
+                bool isPerfect = Convert.ToBoolean(dataGridView1.Rows[row.Index].Cells[0].Value);
+                double score;
+                if (!isPerfect)
+                {
+                    // Calculate score
+                    string scoreString = row.Cells["TaskScore"].Value?.ToString();
+                    if (string.IsNullOrEmpty(scoreString))
+                        score = 0;
+                    else
+                        score = ParseScore(scoreString);
+                    double maxScore = ParseScore(row.Cells["MaxScore"].Value?.ToString());
+
+                    // Add task score information
+                    aggregatedComments += $"{row.Cells["TaskName"].Value}[{score}/{maxScore}]";
+                    // Append comment if exists
+                    string tcomment = row.Cells["TaskComment"].Value?.ToString();
+                    if (!string.IsNullOrEmpty(tcomment))
+                    {
+                        // Dirty trick to convert rtf to plain text
+                        RichTextBox rtb = new RichTextBox();
+                        rtb.Rtf = tcomment;
+                        tcomment = rtb.Text;
+
+                        aggregatedComments += $":\n    {tcomment.Replace("\n", "\n    ")}\n";
+                    }
+                    else
+                        aggregatedComments += "\n";
+                }
+                else
+                {
+                    score = ParseScore(row.Cells["MaxScore"].Value?.ToString());
+                    aggregatedComments += $"{row.Cells["TaskName"].Value}[{score}/{score}]\n";
+                }
+                
+                totalScore += score;
+            }
+
+            score.Text = Math.Round(totalScore, 2).ToString();
+            comment.Text += $"{aggregatedComments}";
+            tableToCommentError.SetError(generateFromTable, "");
+        }
     }
 }
