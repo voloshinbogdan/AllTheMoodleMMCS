@@ -273,7 +273,6 @@ namespace CheckMoodle
                 if (!row.IsNewRow)  // Exclude the 'new' row used for user input
                 {
                     row.Cells["Perfect"].Value = false;               // Set to default value for bool
-                    row.Cells["TaskName"].Value = string.Empty;       // Set to empty string
                     row.Cells["TaskScore"].Value = string.Empty;               // Set to default value for double
                     row.Cells["TaskComment"].Value = string.Empty;    // Set to empty string
                 }
