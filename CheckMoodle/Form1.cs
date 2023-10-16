@@ -292,6 +292,7 @@ namespace CheckMoodle
             {
                 var rtf = new RichTextBox { Text = task.TaskComment };
                 int index = dgv.Rows.Add();
+                dgv.Rows[index].Cells["TaskName"].Value = task.TaskName;
                 dgv.Rows[index].Cells["Perfect"].Value = task.Perfect;
                 dgv.Rows[index].Cells["TaskScore"].Value = task.TaskScore.ToString();
                 dgv.Rows[index].Cells["MaxScore"].Value = task.MaxScore.ToString();
