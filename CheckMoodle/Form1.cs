@@ -17,6 +17,7 @@ using OpenQA.Selenium.Chrome;
 
 namespace CheckMoodle
 {
+
     public partial class Form1 : Form
     {
 
@@ -98,7 +99,10 @@ namespace CheckMoodle
         public Form1(string[] args)
         {
             InitializeComponent();
-            
+            splitContainer3.Panel2MinSize = 210;
+            splitContainer3.SplitterDistance = splitContainer3.Width - splitContainer3.Panel2MinSize;
+
+
             // Table Setup
             dataGridView1.Columns["TaskComment"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             minColumnWidthComment = dataGridView1.Columns["TaskComment"].Width;
@@ -262,6 +266,29 @@ namespace CheckMoodle
             Submissions.SelectedIndex = (Args.Count + Submissions.SelectedIndex - 1) % Args.Count;
         }
 
+        public void PopulateDataGridViewFromData(DataGridView dgv, EvaluationData data)
+        {
+            if (data.Tasks == null)
+                return;
+
+            dgv.Rows.Clear();
+            foreach (var task in data.Tasks)
+            {
+                var rtf = new RichTextBox { Text = task.TaskComment };
+                int index = dgv.Rows.Add();
+                dgv.Rows[index].Cells["Perfect"].Value = task.Perfect;
+                dgv.Rows[index].Cells["TaskName"].Value = task.TaskName;
+                dgv.Rows[index].Cells["TaskScore"].Value = task.TaskScore.ToString();
+                dgv.Rows[index].Cells["MaxScore"].Value = task.MaxScore.ToString();
+                dgv.Rows[index].Cells["TaskComment"].Value = task.TaskComment == "" ? "" : rtf.Rtf;
+                dgv.CurrentCell = dgv.Rows[index].Cells["TaskComment"];
+                dgv.BeginEdit(true);
+                Rtb_AdjustRowSize(dgv.EditingControl, null);
+                dgv.EndEdit();
+
+            }
+        }
+
         private void Submissions_SelectedIndexChanged(object sender, EventArgs e) //+
         {
             this.Enabled = false;
@@ -296,9 +323,10 @@ namespace CheckMoodle
             if (File.Exists(score_path))
             {
                 t = File.ReadAllText(score_path);
-                dynamic s = JsonConvert.DeserializeObject(t);
-                score.Text = s.score;
+                EvaluationData s = JsonConvert.DeserializeObject<EvaluationData>(t);
+                score.Text = s.score.ToString();
                 comment.Text = s.comment;
+                PopulateDataGridViewFromData(dataGridView1, s);
             }
             prevSubInd = Submissions.SelectedIndex;
             this.Enabled = true;
@@ -309,15 +337,41 @@ namespace CheckMoodle
             SaveScore(Submissions.SelectedIndex);
         }
 
-        private void SaveScore(int ind) 
+        private void SaveScore(int ind)
         {
             if (score.Text == "" && comment.Text == "")
                 return;
-            File.WriteAllText(Path.Combine(Args[ind], "score.json"),
-@"{
-    ""score"": " + score.Text.Replace(',', '.') + @",
-    ""comment"": """ + comment.Text.Replace(@"\", @"\\").Replace("\n", "\\n").Replace("\t", "\\t") + @"""
-}");
+            var evalData = ExtractDataEvaluationData(dataGridView1);
+            var jsonString = JsonConvert.SerializeObject(evalData, Formatting.Indented);
+            File.WriteAllText(Path.Combine(Args[ind], "score.json"), jsonString);
+
+        }
+
+        public EvaluationData ExtractDataEvaluationData(DataGridView dgv)
+        {
+            var evalData = new EvaluationData
+            {
+                score = ParseScore(score.Text),
+                comment = comment.Text
+            };
+
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    var rtf = new RichTextBox { Rtf = row.Cells["TaskComment"].Value?.ToString() };
+                    var task = new TaskEntry
+                    {
+                        Perfect = Convert.ToBoolean(row.Cells["Perfect"].Value),
+                        TaskName = row.Cells["TaskName"].Value?.ToString(),
+                        TaskScore = Convert.ToDouble(row.Cells["TaskScore"].Value),
+                        MaxScore = Convert.ToDouble(row.Cells["MaxScore"].Value),
+                        TaskComment = rtf.Text // Convert RTF to plain text
+                    };
+                    evalData.Tasks.Add(task);
+                }
+            }
+            return evalData;
         }
 
         private void score_Validating(object sender, CancelEventArgs e) //+
@@ -699,4 +753,21 @@ namespace CheckMoodle
             tableToCommentError.SetError(generateFromTable, "");
         }
     }
+    public class EvaluationData
+    {
+        public double score { get; set; }
+        public string comment { get; set; }
+        public List<TaskEntry> Tasks { get; set; } = new List<TaskEntry>();
+    }
+
+    public class TaskEntry
+    {
+        public bool Perfect { get; set; }
+        public string TaskName { get; set; }
+        public double TaskScore { get; set; }
+        public double MaxScore { get; set; }
+        public string TaskComment { get; set; }
+    }
+
+
 }

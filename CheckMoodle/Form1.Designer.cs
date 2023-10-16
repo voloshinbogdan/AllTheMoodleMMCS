@@ -132,14 +132,14 @@ namespace CheckMoodle
             this.splitContainer3.Panel2.Controls.Add(this.Save);
             this.splitContainer3.Panel2.Controls.Add(this.back);
             this.splitContainer3.Size = new System.Drawing.Size(534, 167);
-            this.splitContainer3.SplitterDistance = 266;
+            this.splitContainer3.SplitterDistance = 325;
             this.splitContainer3.TabIndex = 0;
             // 
             // justifyScores
             // 
             this.justifyScores.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.justifyScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.justifyScores.Location = new System.Drawing.Point(223, 58);
+            this.justifyScores.Location = new System.Drawing.Point(282, 58);
             this.justifyScores.Name = "justifyScores";
             this.justifyScores.Size = new System.Drawing.Size(39, 23);
             this.justifyScores.TabIndex = 2;
@@ -151,7 +151,7 @@ namespace CheckMoodle
             // 
             this.generateFromTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.generateFromTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.generateFromTable.Location = new System.Drawing.Point(222, 11);
+            this.generateFromTable.Location = new System.Drawing.Point(281, 11);
             this.generateFromTable.Name = "generateFromTable";
             this.generateFromTable.Size = new System.Drawing.Size(29, 40);
             this.generateFromTable.TabIndex = 1;
@@ -174,7 +174,7 @@ namespace CheckMoodle
             this.dataGridView1.Location = new System.Drawing.Point(13, 11);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 25;
-            this.dataGridView1.Size = new System.Drawing.Size(203, 150);
+            this.dataGridView1.Size = new System.Drawing.Size(262, 150);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValidated);
@@ -224,7 +224,7 @@ namespace CheckMoodle
             // 
             this.maxScL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.maxScL.AutoSize = true;
-            this.maxScL.Location = new System.Drawing.Point(227, 11);
+            this.maxScL.Location = new System.Drawing.Point(168, 11);
             this.maxScL.Name = "maxScL";
             this.maxScL.Size = new System.Drawing.Size(0, 13);
             this.maxScL.TabIndex = 13;
@@ -253,7 +253,7 @@ namespace CheckMoodle
             // SaveB
             // 
             this.SaveB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveB.Location = new System.Drawing.Point(187, 113);
+            this.SaveB.Location = new System.Drawing.Point(128, 113);
             this.SaveB.Name = "SaveB";
             this.SaveB.Size = new System.Drawing.Size(72, 23);
             this.SaveB.TabIndex = 11;
@@ -264,7 +264,7 @@ namespace CheckMoodle
             // score
             // 
             this.score.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.score.Location = new System.Drawing.Point(176, 7);
+            this.score.Location = new System.Drawing.Point(117, 7);
             this.score.Name = "score";
             this.score.Size = new System.Drawing.Size(45, 20);
             this.score.TabIndex = 1;
@@ -278,7 +278,7 @@ namespace CheckMoodle
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comment.Location = new System.Drawing.Point(3, 34);
             this.comment.Name = "comment";
-            this.comment.Size = new System.Drawing.Size(258, 75);
+            this.comment.Size = new System.Drawing.Size(199, 75);
             this.comment.TabIndex = 2;
             this.comment.Text = "";
             // 
@@ -289,14 +289,14 @@ namespace CheckMoodle
             this.Submissions.FormattingEnabled = true;
             this.Submissions.Location = new System.Drawing.Point(3, 138);
             this.Submissions.Name = "Submissions";
-            this.Submissions.Size = new System.Drawing.Size(256, 21);
+            this.Submissions.Size = new System.Drawing.Size(197, 21);
             this.Submissions.TabIndex = 9;
             this.Submissions.SelectedIndexChanged += new System.EventHandler(this.Submissions_SelectedIndexChanged);
             // 
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(124, 113);
+            this.Save.Location = new System.Drawing.Point(65, 113);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(57, 23);
             this.Save.TabIndex = 3;
@@ -307,7 +307,7 @@ namespace CheckMoodle
             // back
             // 
             this.back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.back.Location = new System.Drawing.Point(62, 113);
+            this.back.Location = new System.Drawing.Point(3, 113);
             this.back.Name = "back";
             this.back.Size = new System.Drawing.Size(56, 23);
             this.back.TabIndex = 8;
