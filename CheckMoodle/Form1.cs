@@ -357,8 +357,6 @@ namespace CheckMoodle
 
         private void SaveScore(int ind)
         {
-            if (score.Text == "" && comment.Text == "")
-                return;
             var evalData = ExtractDataEvaluationData(dataGridView1);
             var jsonString = JsonConvert.SerializeObject(evalData, Formatting.Indented);
             File.WriteAllText(Path.Combine(Args[ind], "score.json"), jsonString);
@@ -382,8 +380,8 @@ namespace CheckMoodle
                     {
                         Perfect = Convert.ToBoolean(row.Cells["Perfect"].Value),
                         TaskName = row.Cells["TaskName"].Value?.ToString(),
-                        TaskScore = Convert.ToDouble(row.Cells["TaskScore"].Value),
-                        MaxScore = Convert.ToDouble(row.Cells["MaxScore"].Value),
+                        TaskScore = ParseScore(row.Cells["TaskScore"].Value?.ToString()),
+                        MaxScore = ParseScore(row.Cells["MaxScore"].Value?.ToString()),
                         TaskComment = rtf.Text // Convert RTF to plain text
                     };
                     evalData.Tasks.Add(task);
@@ -606,7 +604,7 @@ namespace CheckMoodle
 
         private double ParseScore(string text)
         {
-            return double.Parse(text.Replace(".", ","));
+            return string.IsNullOrEmpty(text) ? 0 : double.Parse(text.Replace(".", ","));
         }
 
         private bool TryParseScore(string text, out double r)
