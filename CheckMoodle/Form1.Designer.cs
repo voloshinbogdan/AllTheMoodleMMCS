@@ -44,6 +44,7 @@ namespace CheckMoodle
             this.TaskScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MaxScore = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TaskComment = new CheckMoodle.DataGridViewRichTextBoxColumn();
+            this.checkProgress = new System.Windows.Forms.ProgressBar();
             this.maxScL = new System.Windows.Forms.Label();
             this.addMoss = new System.Windows.Forms.Button();
             this.moss = new System.Windows.Forms.LinkLabel();
@@ -122,6 +123,7 @@ namespace CheckMoodle
             // 
             // splitContainer3.Panel2
             // 
+            this.splitContainer3.Panel2.Controls.Add(this.checkProgress);
             this.splitContainer3.Panel2.Controls.Add(this.maxScL);
             this.splitContainer3.Panel2.Controls.Add(this.addMoss);
             this.splitContainer3.Panel2.Controls.Add(this.moss);
@@ -220,6 +222,15 @@ namespace CheckMoodle
             this.TaskComment.Name = "TaskComment";
             this.TaskComment.Width = 57;
             // 
+            // checkProgress
+            // 
+            this.checkProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkProgress.Location = new System.Drawing.Point(3, 151);
+            this.checkProgress.Name = "checkProgress";
+            this.checkProgress.Size = new System.Drawing.Size(197, 10);
+            this.checkProgress.TabIndex = 14;
+            // 
             // maxScL
             // 
             this.maxScL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -253,7 +264,7 @@ namespace CheckMoodle
             // SaveB
             // 
             this.SaveB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveB.Location = new System.Drawing.Point(128, 113);
+            this.SaveB.Location = new System.Drawing.Point(128, 100);
             this.SaveB.Name = "SaveB";
             this.SaveB.Size = new System.Drawing.Size(72, 23);
             this.SaveB.TabIndex = 11;
@@ -278,7 +289,7 @@ namespace CheckMoodle
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comment.Location = new System.Drawing.Point(3, 34);
             this.comment.Name = "comment";
-            this.comment.Size = new System.Drawing.Size(199, 75);
+            this.comment.Size = new System.Drawing.Size(199, 60);
             this.comment.TabIndex = 2;
             this.comment.Text = "";
             // 
@@ -287,7 +298,7 @@ namespace CheckMoodle
             this.Submissions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Submissions.FormattingEnabled = true;
-            this.Submissions.Location = new System.Drawing.Point(3, 138);
+            this.Submissions.Location = new System.Drawing.Point(3, 125);
             this.Submissions.Name = "Submissions";
             this.Submissions.Size = new System.Drawing.Size(197, 21);
             this.Submissions.TabIndex = 9;
@@ -296,7 +307,7 @@ namespace CheckMoodle
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(65, 113);
+            this.Save.Location = new System.Drawing.Point(65, 100);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(57, 23);
             this.Save.TabIndex = 3;
@@ -307,7 +318,7 @@ namespace CheckMoodle
             // back
             // 
             this.back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.back.Location = new System.Drawing.Point(3, 113);
+            this.back.Location = new System.Drawing.Point(3, 100);
             this.back.Name = "back";
             this.back.Size = new System.Drawing.Size(56, 23);
             this.back.TabIndex = 8;
@@ -398,6 +409,7 @@ namespace CheckMoodle
         private System.Windows.Forms.ErrorProvider cellError;
         private System.Windows.Forms.ErrorProvider rowError;
         private System.Windows.Forms.ErrorProvider tableToCommentError;
+        private System.Windows.Forms.ProgressBar checkProgress;
     }
 }
 

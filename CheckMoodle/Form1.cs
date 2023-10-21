@@ -102,7 +102,6 @@ namespace CheckMoodle
             splitContainer3.Panel2MinSize = 210;
             splitContainer3.SplitterDistance = splitContainer3.Width - splitContainer3.Panel2MinSize;
 
-
             // Table Setup
             dataGridView1.Columns["TaskComment"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             minColumnWidthComment = dataGridView1.Columns["TaskComment"].Width;
@@ -228,6 +227,12 @@ namespace CheckMoodle
 
             }
 
+            // Set Minimum to 1 to represent the first file being copied.
+            checkProgress.Minimum = 0;
+            // Set Maximum to the total number of files to copy.
+            checkProgress.Maximum = Submissions.Items.Count - 1;
+            // Set the Step property to a value of 1 to represent each file being copied.
+            checkProgress.Step = 1;
             Submissions.SelectedIndex = 0;
         }
         private void HandleWinEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
@@ -348,6 +353,8 @@ namespace CheckMoodle
                 ClearColumns(dataGridView1);
             prevSubInd = Submissions.SelectedIndex;
             this.Enabled = true;
+            // Set the initial value of the ProgressBar.
+            checkProgress.Value = Submissions.SelectedIndex;
         }
 
         private void SaveB_Click(object sender, EventArgs e) //+
