@@ -48,6 +48,8 @@ namespace CheckMoodle
         IWebDriver webdriver;
         private Process _processWebdriver;
         private ClosableProcess _processChrome;
+        LessonConfiguration lessonConfig;
+        string workingDir;
 
         List<string> Args;
         string html;
@@ -76,7 +78,6 @@ namespace CheckMoodle
         private IntPtr ChromeForegroundHookId;
         private WinEventDelegate IDEEventDelegate;
         private bool allRowsRevalidated = true;
-
         public static void MakeProcessWindowBorderless(Process process)
         {
             if (process != null)
@@ -108,23 +109,23 @@ namespace CheckMoodle
             minRawHeight = dataGridView1.RowTemplate.Height;
 
             // Parsing command line arguments
-            string working_dir = "";
+            workingDir = "";
             string ide_code = "";
             if (args.Length == 1)
             {
-                working_dir = args[0];
-                string cfg_path = Path.Combine(working_dir, "assign.json");
+                workingDir = args[0];
+                string cfg_path = Path.Combine(workingDir, "assign.json");
                 if (File.Exists(cfg_path))
                 {
                     var cfgt = File.ReadAllText(cfg_path);
-                    dynamic cfg = JsonConvert.DeserializeObject(cfgt);
-                    ide_code = cfg.IDE;
-                    maxScore = cfg.max_score;
+                    lessonConfig = JsonConvert.DeserializeObject<LessonConfiguration>(cfgt);
+                    ide_code = lessonConfig.IDE;
+                    maxScore = lessonConfig.max_score;
                 }
             }
             else if (args.Length == 3)
             {
-                working_dir = args[0];
+                workingDir = args[0];
                 ide_code = args[1];
                 maxScore = ParseScore(args[2]);
             }
@@ -132,12 +133,12 @@ namespace CheckMoodle
                 throw new ArgumentException("Should be 3 parameters (path to folder, IDE, max score) or 1 (path to folder but with json");
 
             maxScL.Text = "/" + maxScore;
-            html = Path.Combine(working_dir, "task.html");
+            html = Path.Combine(workingDir, "task.html");
 
             // Read config
             var t = File.ReadAllText("config.json");
             dynamic config = JsonConvert.DeserializeObject(t);
-            Args = Directory.GetDirectories(working_dir).Where(s => s.Contains("assignsubmission_file")).ToList();
+            Args = Directory.GetDirectories(workingDir).Where(s => s.Contains("assignsubmission_file")).ToList();
             Submissions.Items.AddRange(Args.Select(s => new DirectoryInfo(s).Name).ToArray());
 
             // Choose, load and configure IDE window
@@ -150,7 +151,7 @@ namespace CheckMoodle
                         if (Submissions.SelectedIndex == -1)
                             this.Text = "Checker";
                         else
-                            this.Text = new DirectoryInfo(working_dir).Name + "\\" +
+                            this.Text = new DirectoryInfo(workingDir).Name + "\\" +
                                 new DirectoryInfo(Args[Submissions.SelectedIndex]).Name + " - Checker";
                     });
                     break;
@@ -161,7 +162,7 @@ namespace CheckMoodle
                         if (Submissions.SelectedIndex == -1)
                             this.Text = "Checker";
                         else
-                            this.Text = new DirectoryInfo(working_dir).Name + "\\" +
+                            this.Text = new DirectoryInfo(workingDir).Name + "\\" +
                                  new DirectoryInfo(Args[Submissions.SelectedIndex]).Name + " - Checker";
                     });
                     break;
@@ -173,7 +174,7 @@ namespace CheckMoodle
                         if (Submissions.SelectedIndex == -1)
                             this.Text = "Checker";
                         else
-                            this.Text = new DirectoryInfo(working_dir).Name + "\\" +
+                            this.Text = new DirectoryInfo(workingDir).Name + "\\" +
                                 new DirectoryInfo(Args[Submissions.SelectedIndex]).Name + " - Checker";
                     },
                     s =>
@@ -233,7 +234,7 @@ namespace CheckMoodle
             checkProgress.Maximum = Submissions.Items.Count - 1;
             // Set the Step property to a value of 1 to represent each file being copied.
             checkProgress.Step = 1;
-            Submissions.SelectedIndex = 0;
+            Submissions.SelectedIndex = lessonConfig?.InterruptedOnStudent ?? 0;
         }
         private void HandleWinEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
@@ -426,6 +427,14 @@ namespace CheckMoodle
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (lessonConfig != null)
+            {
+                lessonConfig.InterruptedOnStudent = Submissions.SelectedIndex;
+
+                string updatedJson = JsonConvert.SerializeObject(lessonConfig, Formatting.Indented);
+                File.WriteAllText(Path.Combine(workingDir, "assign.json"), updatedJson);
+
+            }
             try
             {
                 UnhookWinEvent(IDEForegroundHookId);
@@ -790,6 +799,14 @@ namespace CheckMoodle
         public double TaskScore { get; set; }
         public double MaxScore { get; set; }
         public string TaskComment { get; set; }
+    }
+
+    public class LessonConfiguration
+    {
+        public double max_score { get; set; }
+        public string IDE { get; set; }
+        public string lesson_id { get; set; }
+        public int? InterruptedOnStudent { get; set; }
     }
 
 
