@@ -45,6 +45,7 @@ namespace CheckMoodle
                     vsDTE = (EnvDTE.DTE)runningObject;
                     if (ConfigureApp != null)
                         ConfigureApp(proc.p);
+                    //vsDTE.ExecuteCommand("View.FullScreen");
                     return;
                 }
 

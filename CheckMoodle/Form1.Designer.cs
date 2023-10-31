@@ -59,6 +59,8 @@ namespace CheckMoodle
             this.cellError = new System.Windows.Forms.ErrorProvider(this.components);
             this.rowError = new System.Windows.Forms.ErrorProvider(this.components);
             this.tableToCommentError = new System.Windows.Forms.ErrorProvider(this.components);
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.scoreError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -73,6 +75,10 @@ namespace CheckMoodle
             ((System.ComponentModel.ISupportInitialize)(this.cellError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rowError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tableToCommentError)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // scoreError
@@ -93,19 +99,17 @@ namespace CheckMoodle
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(534, 553);
-            this.splitContainer2.SplitterDistance = 382;
+            this.splitContainer2.Size = new System.Drawing.Size(558, 594);
+            this.splitContainer2.SplitterDistance = 341;
             this.splitContainer2.TabIndex = 14;
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(528, 377);
+            this.panel2.Size = new System.Drawing.Size(558, 341);
             this.panel2.TabIndex = 6;
             this.panel2.Resize += new System.EventHandler(this.panel2_Resize);
             // 
@@ -133,15 +137,15 @@ namespace CheckMoodle
             this.splitContainer3.Panel2.Controls.Add(this.Submissions);
             this.splitContainer3.Panel2.Controls.Add(this.Save);
             this.splitContainer3.Panel2.Controls.Add(this.back);
-            this.splitContainer3.Size = new System.Drawing.Size(534, 167);
-            this.splitContainer3.SplitterDistance = 325;
+            this.splitContainer3.Size = new System.Drawing.Size(558, 249);
+            this.splitContainer3.SplitterDistance = 329;
             this.splitContainer3.TabIndex = 0;
             // 
             // justifyScores
             // 
             this.justifyScores.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.justifyScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.justifyScores.Location = new System.Drawing.Point(282, 58);
+            this.justifyScores.Location = new System.Drawing.Point(277, 58);
             this.justifyScores.Name = "justifyScores";
             this.justifyScores.Size = new System.Drawing.Size(39, 23);
             this.justifyScores.TabIndex = 2;
@@ -153,7 +157,7 @@ namespace CheckMoodle
             // 
             this.generateFromTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.generateFromTable.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.generateFromTable.Location = new System.Drawing.Point(281, 11);
+            this.generateFromTable.Location = new System.Drawing.Point(276, 11);
             this.generateFromTable.Name = "generateFromTable";
             this.generateFromTable.Size = new System.Drawing.Size(29, 40);
             this.generateFromTable.TabIndex = 1;
@@ -176,7 +180,7 @@ namespace CheckMoodle
             this.dataGridView1.Location = new System.Drawing.Point(13, 11);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 25;
-            this.dataGridView1.Size = new System.Drawing.Size(262, 150);
+            this.dataGridView1.Size = new System.Drawing.Size(257, 222);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValidated);
@@ -226,16 +230,16 @@ namespace CheckMoodle
             // 
             this.checkProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkProgress.Location = new System.Drawing.Point(3, 151);
+            this.checkProgress.Location = new System.Drawing.Point(3, 223);
             this.checkProgress.Name = "checkProgress";
-            this.checkProgress.Size = new System.Drawing.Size(197, 10);
+            this.checkProgress.Size = new System.Drawing.Size(217, 10);
             this.checkProgress.TabIndex = 14;
             // 
             // maxScL
             // 
             this.maxScL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.maxScL.AutoSize = true;
-            this.maxScL.Location = new System.Drawing.Point(168, 11);
+            this.maxScL.Location = new System.Drawing.Point(188, 11);
             this.maxScL.Name = "maxScL";
             this.maxScL.Size = new System.Drawing.Size(0, 13);
             this.maxScL.TabIndex = 13;
@@ -264,7 +268,7 @@ namespace CheckMoodle
             // SaveB
             // 
             this.SaveB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveB.Location = new System.Drawing.Point(128, 100);
+            this.SaveB.Location = new System.Drawing.Point(141, 172);
             this.SaveB.Name = "SaveB";
             this.SaveB.Size = new System.Drawing.Size(72, 23);
             this.SaveB.TabIndex = 11;
@@ -275,7 +279,7 @@ namespace CheckMoodle
             // score
             // 
             this.score.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.score.Location = new System.Drawing.Point(117, 7);
+            this.score.Location = new System.Drawing.Point(137, 7);
             this.score.Name = "score";
             this.score.Size = new System.Drawing.Size(45, 20);
             this.score.TabIndex = 1;
@@ -289,7 +293,7 @@ namespace CheckMoodle
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comment.Location = new System.Drawing.Point(3, 34);
             this.comment.Name = "comment";
-            this.comment.Size = new System.Drawing.Size(199, 60);
+            this.comment.Size = new System.Drawing.Size(212, 132);
             this.comment.TabIndex = 2;
             this.comment.Text = "";
             // 
@@ -298,16 +302,16 @@ namespace CheckMoodle
             this.Submissions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Submissions.FormattingEnabled = true;
-            this.Submissions.Location = new System.Drawing.Point(3, 125);
+            this.Submissions.Location = new System.Drawing.Point(3, 197);
             this.Submissions.Name = "Submissions";
-            this.Submissions.Size = new System.Drawing.Size(197, 21);
+            this.Submissions.Size = new System.Drawing.Size(217, 21);
             this.Submissions.TabIndex = 9;
             this.Submissions.SelectedIndexChanged += new System.EventHandler(this.Submissions_SelectedIndexChanged);
             // 
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(65, 100);
+            this.Save.Location = new System.Drawing.Point(78, 172);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(57, 23);
             this.Save.TabIndex = 3;
@@ -318,7 +322,7 @@ namespace CheckMoodle
             // back
             // 
             this.back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.back.Location = new System.Drawing.Point(3, 100);
+            this.back.Location = new System.Drawing.Point(16, 172);
             this.back.Name = "back";
             this.back.Size = new System.Drawing.Size(56, 23);
             this.back.TabIndex = 8;
@@ -349,12 +353,39 @@ namespace CheckMoodle
             // 
             this.tableToCommentError.ContainerControl = this;
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Size = new System.Drawing.Size(1209, 594);
+            this.splitContainer1.SplitterDistance = 647;
+            this.splitContainer1.TabIndex = 3;
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(647, 594);
+            this.panel1.TabIndex = 0;
+            this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(534, 553);
-            this.Controls.Add(this.splitContainer2);
+            this.ClientSize = new System.Drawing.Size(1209, 594);
+            this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Activated += new System.EventHandler(this.Form1_Activated);
@@ -377,6 +408,10 @@ namespace CheckMoodle
             ((System.ComponentModel.ISupportInitialize)(this.cellError)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rowError)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tableToCommentError)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -410,6 +445,8 @@ namespace CheckMoodle
         private System.Windows.Forms.ErrorProvider rowError;
         private System.Windows.Forms.ErrorProvider tableToCommentError;
         private System.Windows.Forms.ProgressBar checkProgress;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

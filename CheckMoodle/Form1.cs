@@ -41,6 +41,8 @@ namespace CheckMoodle
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
         [DllImport("user32.dll")]
         public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         // <-WIN32
 
         private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
@@ -59,19 +61,26 @@ namespace CheckMoodle
 
         private const int SW_SHOWMAXIMIZED = 3;
         private const int SW_SHOWMINIMIZED = 3;
+        private const int SW_SHOWNOACTIVATE = 4;
         private const uint WM_SYSCOMMAND = 0x0112;
         const int GWL_STYLE = -16;
         const int GWL_EXSTYLE = -20;
+        const int SW_RESTORE = 9;
+        const int SW_MAXIMIZE = 3;
         const int WS_EX_APPWINDOW = 0x00040000;
         const int WS_EX_TOOLWINDOW = 0x00000080;
         const int WS_BORDER = 0x0080000;
         const int WS_CAPTION = 0x00C0000;
-        const uint SWP_NOMOVE = 0x0002;
-        const uint SWP_NOSIZE = 0x0001;
-        static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
-        static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
-        static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-        private const uint SWP_NOACTIVATE = 0x0010;
+        // Constants for SetWindowPos
+        private const int SWP_NOZORDER = 0x0004;
+        private const int SWP_NOMOVE = 0x0002;
+        private const int SWP_NOSIZE = 0x0001;
+        private const int SWP_NOACTIVATE = 0x0010;
+        private const int SWP_SHOWWINDOW = 0x0040;
+        private static readonly IntPtr HWND_TOP = IntPtr.Zero;
+        private static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
         const uint EVENT_SYSTEM_FOREGROUND = 3;
         const uint WINEVENT_OUTOFCONTEXT = 0;
         private IntPtr IDEForegroundHookId;
@@ -147,7 +156,6 @@ namespace CheckMoodle
                 case "vsc":
                     IDE = new OpenCloseIDE((string)config.vscode, "-n", p =>
                     {
-                        IDEResize(p);
                         if (Submissions.SelectedIndex == -1)
                             this.Text = "Checker";
                         else
@@ -158,7 +166,6 @@ namespace CheckMoodle
                 case "vs":
                     IDE = new VSAPI((string)config.vsversion, @".", p =>
                     {
-                        IDEResize(p);
                         if (Submissions.SelectedIndex == -1)
                             this.Text = "Checker";
                         else
@@ -170,7 +177,6 @@ namespace CheckMoodle
                     IDE = new OpenCloseIDE((string)config.pascal, "", p =>
                     {
                         Thread.Sleep(100);
-                        IDEResize(p);
                         if (Submissions.SelectedIndex == -1)
                             this.Text = "Checker";
                         else
@@ -193,12 +199,10 @@ namespace CheckMoodle
                     throw new ArgumentException("No such IDE " + ide_code);
 
             }
-            int windowStyle = GetWindowLong(IDE.GetProcess().MainWindowHandle, GWL_EXSTYLE);
-            SetWindowLong(IDE.GetProcess().MainWindowHandle, GWL_EXSTYLE, (windowStyle | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW);
-            IDEEventDelegate = new WinEventDelegate(HandleWinEvent);
-            IDEForegroundHookId = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, IDEEventDelegate,
-                (uint)IDE.GetProcess().Id, 0, WINEVENT_OUTOFCONTEXT);
-
+            SetParent(IDE.GetProcess().MainWindowHandle, panel1.Handle);
+            //MakeProcessWindowBorderless(IDE.GetProcess());
+            ShowWindow(IDE.GetProcess().MainWindowHandle, SW_MAXIMIZE);
+            panel1_Resize(null, null);
 
             // Loading task file
             {
@@ -240,13 +244,14 @@ namespace CheckMoodle
         {
             if (hwnd == IDE.GetProcess().MainWindowHandle)
             {
+                /*
                 this.Invoke((Action)(() =>
                 {
                     // First, set the main window as topmost
                     SetWindowPos(this.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
                     // Immediately after, remove the topmost status from the main window
                     SetWindowPos(this.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-                }));
+                }));*/
             }
             else if (hwnd == _processChrome.p.MainWindowHandle)
             {
@@ -475,31 +480,12 @@ namespace CheckMoodle
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Maximized)
-            {
-                WindowState = FormWindowState.Normal;
-                Top = Screen.PrimaryScreen.WorkingArea.Top;
-                Left = 2 * Screen.PrimaryScreen.WorkingArea.Width / 3;
-                Width = Screen.PrimaryScreen.WorkingArea.Width - Left;
-                Height = Screen.PrimaryScreen.WorkingArea.Height;
-            }
-            IDEResize(IDE?.GetProcess());
 
-        }
-
-        private void IDEResize(Process p)
-        {
-            if (p?.MainWindowHandle != null)
-            {
-                MoveWindow(p.MainWindowHandle, 0, this.Top, this.Left + 10, this.Height, true);
-                SetWindowPos(p.MainWindowHandle, this.Handle, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-
-            }
         }
 
         private void Form1_Move(object sender, EventArgs e)
         {
-            IDEResize(IDE?.GetProcess());
+
         }
 
         private void Rtb_AdjustRowSize(object sender, EventArgs e)
@@ -586,7 +572,7 @@ namespace CheckMoodle
 
         private void Form1_Activated(object sender, EventArgs e)
         {
-            IDEResize(IDE.GetProcess());
+
         }
 
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -783,6 +769,15 @@ namespace CheckMoodle
             score.Text = Math.Round(totalScore, 2).ToString();
             comment.Text += $"{aggregatedComments}";
             tableToCommentError.SetError(generateFromTable, "");
+        }
+
+        private void panel1_Resize(object sender, EventArgs e)
+        {
+            if (IDE.GetProcess().MainWindowHandle != null)
+            {
+                ShowWindow(IDE.GetProcess().MainWindowHandle, SW_MAXIMIZE);
+                MoveWindow(IDE.GetProcess().MainWindowHandle, 0, 0, panel1.Width, panel1.Height, true);
+            }
         }
     }
     public class EvaluationData
