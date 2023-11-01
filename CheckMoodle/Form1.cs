@@ -43,6 +43,9 @@ namespace CheckMoodle
         public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll")]
+        public static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
+
         // <-WIN32
 
         private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
@@ -65,6 +68,8 @@ namespace CheckMoodle
         private const uint WM_SYSCOMMAND = 0x0112;
         const int GWL_STYLE = -16;
         const int GWL_EXSTYLE = -20;
+        const int WS_POPUP = unchecked((int)0x80000000);
+        const int WS_CHILD = 0x40000000;
         const int SW_RESTORE = 9;
         const int SW_MAXIMIZE = 3;
         const int WS_EX_APPWINDOW = 0x00040000;
@@ -156,11 +161,16 @@ namespace CheckMoodle
                 case "vsc":
                     IDE = new OpenCloseIDE((string)config.vscode, "-n", p =>
                     {
+                        SetParent(IDE.GetProcess().MainWindowHandle, panel1.Handle);
+                        ShowWindow(IDE.GetProcess().MainWindowHandle, SW_MAXIMIZE);
+                        panel1_Resize(null, null);
+
                         if (Submissions.SelectedIndex == -1)
                             this.Text = "Checker";
                         else
                             this.Text = new DirectoryInfo(workingDir).Name + "\\" +
                                 new DirectoryInfo(Args[Submissions.SelectedIndex]).Name + " - Checker";
+
                     });
                     break;
                 case "vs":
@@ -172,16 +182,38 @@ namespace CheckMoodle
                             this.Text = new DirectoryInfo(workingDir).Name + "\\" +
                                  new DirectoryInfo(Args[Submissions.SelectedIndex]).Name + " - Checker";
                     });
+                    {
+                        int currentStyle = GetWindowLong(IDE.GetProcess().MainWindowHandle, GWL_STYLE);
+                        int newStyle = (currentStyle & ~WS_POPUP) | WS_CHILD;
+
+                        SetWindowLong(IDE.GetProcess().MainWindowHandle, GWL_STYLE, newStyle);
+                    }
+                    SetParent(IDE.GetProcess().MainWindowHandle, panel1.Handle);
+                    ShowWindow(IDE.GetProcess().MainWindowHandle, SW_MAXIMIZE);
+                    panel1_Resize(null, null);
                     break;
                 case "pas":
                     IDE = new OpenCloseIDE((string)config.pascal, "", p =>
                     {
+
+                        // Adjust window styles
+                        int currentStyle = GetWindowLong(p.MainWindowHandle, GWL_STYLE);
+                        int newStyle = (currentStyle & ~WS_POPUP) | WS_CHILD;
+
+                        SetWindowLong(p.MainWindowHandle, GWL_STYLE, newStyle);
+                        SetParent(IDE.GetProcess().MainWindowHandle, (IntPtr)0);
+                        SetParent(IDE.GetProcess().MainWindowHandle, panel1.Handle);
+                        panel1_Resize(null, null);
+
                         Thread.Sleep(100);
                         if (Submissions.SelectedIndex == -1)
                             this.Text = "Checker";
                         else
                             this.Text = new DirectoryInfo(workingDir).Name + "\\" +
                                 new DirectoryInfo(Args[Submissions.SelectedIndex]).Name + " - Checker";
+
+
+
                     },
                     s =>
                     {
@@ -199,10 +231,6 @@ namespace CheckMoodle
                     throw new ArgumentException("No such IDE " + ide_code);
 
             }
-            SetParent(IDE.GetProcess().MainWindowHandle, panel1.Handle);
-            //MakeProcessWindowBorderless(IDE.GetProcess());
-            ShowWindow(IDE.GetProcess().MainWindowHandle, SW_MAXIMIZE);
-            panel1_Resize(null, null);
 
             // Loading task file
             {
