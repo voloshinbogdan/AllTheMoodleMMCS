@@ -14,7 +14,21 @@ import glob
 import pandas as pd
 from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
+from loguru import logger
+import builtins
 
+# Save the original print function
+original_print = print
+
+# Override the print function
+def print(*args, **kwargs):
+    # Convert the print arguments into a string
+    output = ' '.join(str(arg) for arg in args)
+    # Use logger.info to log the message
+    logger.opt(depth=1).info(output)
+
+# Replace the built-in print with your custom function
+builtins.print = print
 
 def getDownLoadedFileName(web, waitTime):
     driver = web.driver
@@ -187,10 +201,13 @@ for fext in course_data['fexts']:
 
 print('Running moss...')
 moss_args = moss.load_args()
+logger.debug(f'Moss args: {moss_args}')
 
 moss_args['files'] = [join(course_data['data_folder'], moss_loc, '*', 'moss_to_send' + os.path.splitext(f)[1]) for f in course_data['fexts']]
 moss_args['l'] = course_data['l']
+logger.debug(f'Changed moss args: {moss_args}')
 url = moss.call_moss(**moss_args)
+logger.debug(f'Moss url: {url}')
 print('Sorting...')
 page, sortedtable = moss.sort_moss(url)
 print('done.')
