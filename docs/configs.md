@@ -1,16 +1,19 @@
 ### Инструкции по настройке конфигурационных файлов:
 
-1.  config_demo.json (в директории CheckMoodle)
+1.  config.json - шаблон config_demo.json (в директории CheckMoodle). Настройка IDE, использующихся в GUI для проверки.
+    Хотя бы один параметр должен быть определён.
 
     -   `vscode`: Путь к исполняемому файлу Visual Studio Code. Например: `"C:/Path_to_VSCode/vscode.exe"`
     -   `pascal`: Путь к исполняемому файлу Pascal. Например: `"C:/Path_to_Pascal/pascal.exe"`
-2.  credentials_demo.json (в директории MoodleAssistant)
+    - 	`vsversion`":  Мажорная версия Visual Studio установленная в системе. Например для Visual Studio 2022 это `"17"`,
+3.  credentials.json - шаблон credentials_demo.json (в директории MoodleAssistant).
+    Настройка локального хранилища и доступа к moodle.
 
-    -   `download_folder`: Путь к папке, в которую будут загружаться файлы. Например: `"C:/Users/your_username/Downloads"`
+    -   `download_folder`: Путь к папке, в которую браузер скачивает файлы. Например: `"C:/Users/your_username/Downloads"`
     -   `username`: Имя пользователя для входа в Moodle. Например: `"your_moodle_username"`
     -   `password`: Пароль для входа в Moodle. Например: `"your_moodle_password"`
-    -   `check_moodle`: Путь к исполняемому файлу CheckMoodle. Например: `"D:/Path_to_your_project/AllTheMoodleMMCS/CheckMoodle/bin/Release/CheckMoodle.exe"`
-3.  cs211b_demo.json (в директории MoodleAssistant)
+    -   `check_moodle`: Путь к исполняемому файлу CheckMoodle (После сборки лежит в репозитории). Например: `"D:/Path_to_your_project/AllTheMoodleMMCS/CheckMoodle/bin/Release/CheckMoodle.exe"`
+5.  cs211b.json - шаблон cs211b_demo.json (в директории MoodleAssistant). Имя может быть любое. Конфиги для разных курсов.
 
     -   `course`: Ссылка на курс в Moodle. Например: `"https://your_moodle_link/course/view.php?id=XXX"`
     -   `data_folder`: Путь к папке с данными. Например: `"D:/Path_to_data_folder"`
