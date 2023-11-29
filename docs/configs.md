@@ -28,9 +28,10 @@
 После того как вы настроите конфигурационные файлы, убедитесь, что все пути и учетные данные указаны верно. Это обеспечит корректную работу программы.
 Вот пример файла `cs211b_demo.json` с двумя группами:
 
-jsonCopy code
 
-`{
+
+```json
+{
 	"course": "https://your_moodle_link/course/view.php?id=XXX",
 	"data_folder": "D:/Path_to_data_folder",
 	"l": "cc",
@@ -52,7 +53,8 @@ jsonCopy code
 			"me": "XX"
 		}
 	}
-}`
+}
+```
 
 В этом примере:
 
