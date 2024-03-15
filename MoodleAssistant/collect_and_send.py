@@ -20,7 +20,9 @@ with open(join(path, 'assign.json'), 'r', encoding='utf-8-sig') as f:
 
 # Collect
 table = pd.read_csv(join(path, 'score.csv'), sep=',', index_col='Идентификатор')
-
+table['Отзыв в виде комментария'] =  table['Отзыв в виде комментария'].astype(str)
+table['Отзыв в виде комментария'] = ""
+ 
 submissions = list(filter(lambda x: 'assignsubmission' in x, glob.glob(join(path, '*'), recursive = False)))
 
 for p in submissions:
@@ -28,9 +30,15 @@ for p in submissions:
     if os.path.exists(scp):
         with open(scp, 'r', encoding='utf-8-sig') as f:
             sc = json.load(f)
-        ident = 'Участник' + list(filter(lambda x: x != '', os.path.basename(p).split('_')))[-3]
-        table.loc[ident, 'Оценка'] = sc['score']
-        table.loc[ident, 'Отзыв в виде комментария'] = sc['comment']
+        if not 'git' in os.path.basename(p):
+            ident = 'Участник' + list(filter(lambda x: x != '', os.path.basename(p).split('_')))[-3]
+            table.loc[ident, 'Оценка'] = sc['score']
+            table.loc[ident, 'Отзыв в виде комментария'] = sc['comment']
+        else:
+            name = ' '.join(os.path.basename(p).split('_')[1:-3])
+            index = table[table["Полное имя"] == name].index.min()
+            table.at[index, 'Оценка'] = sc['score']
+            table.at[index, 'Отзыв в виде комментария'] = sc['comment']
 
 table.to_csv(join(path, 'score_tmp.csv'), sep=',', encoding='utf-8-sig')
 

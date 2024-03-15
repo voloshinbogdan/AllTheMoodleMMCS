@@ -59,6 +59,11 @@ def getDownLoadedFileName(web, waitTime):
         if time.time() > endTime:
             break
 
+def find_first_number_in_string(s):
+    import re
+    match = re.search(r'\d+', s)
+    return int(match.group()) if match else None
+
 parser = argparse.ArgumentParser(description='Download')
 parser.add_argument('lesson', type=str,
                     help='Lesson to change')
@@ -68,6 +73,8 @@ parser.add_argument('-u', type=str, default=None,
                     help='User name')
 parser.add_argument('-p', type=str, default=None,
                     help='Password')
+parser.add_argument('--git', action='store_true',
+                    help='Download submitions from git')
 
 args = parser.parse_args()
 
@@ -100,10 +107,22 @@ def download_and_extract(group, ex_to):
     os.remove(df_t)
 
 moss_loc = join(args.lesson, 'moss')
-download_and_extract('0', moss_loc)
 
-for g in groups:
-    download_and_extract(groups[g]['group'], args.lesson)
+if args.git:
+    print("Using git")
+    
+    download_git_all = f'{cred["classroom_downloader"]} -s -n {find_first_number_in_string(args.lesson)} -a 1 -o \"{join(course_data["data_folder"], moss_loc)}\" -p --no-new-path'
+    print(download_git_all)
+    subprocess.call(download_git_all)
+    
+    download_git_my = f'{cred["classroom_downloader"]} -s -n {find_first_number_in_string(args.lesson)} -a 3 -r Волошин -o \"{join(course_data["data_folder"], args.lesson)}\" -p --no-new-path'
+    print(download_git_my)
+    subprocess.call(download_git_my)
+else:
+    download_and_extract('0', moss_loc)
+
+    for g in groups:
+        download_and_extract(groups[g]['group'], args.lesson)
 
 print('Download assign..')
 web.go_to(moodle.assign_options.format(lid))
@@ -182,7 +201,7 @@ for fext in course_data['fexts']:
     for subd in glob.glob(join(mfp, '*\\')):
         outpf = join(subd, 'moss_to_send' + os.path.splitext(fext)[1])
         text = ''
-        for prog in glob.glob(join(subd, '**', fext), recursive=True):
+        for prog in glob.glob(join(glob.escape(subd), '**', fext), recursive=True):
             if os.path.isfile(prog):
                 try:
                     with open(prog, 'r', encoding='utf-8-sig') as f:
