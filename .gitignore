@@ -757,3 +757,4 @@ MoodleAssistant/old_configs
 MoodleAssistant/credentials.json
 MoodleAssistant/cs*.json
 CheckMoodle/config.json
+MoodleAssistant/StudentData
