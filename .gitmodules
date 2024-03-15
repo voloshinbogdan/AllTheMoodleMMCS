@@ -1,0 +1,3 @@
+[submodule "MoodleAssistant/ClassroomDownloader"]
+	path = MoodleAssistant/ClassroomDownloader
+	url = git@github.com:MMCS-FIIT/ClassroomDownloader.git
