@@ -64,6 +64,13 @@ def find_first_number_in_string(s):
     match = re.search(r'\d+', s)
     return int(match.group()) if match else None
 
+def encode_lesson(s):
+    num = find_first_number_in_string(s)
+    if "Бонус" in s:
+        return f"b{num}"
+    else:
+        return f"{num}"
+
 parser = argparse.ArgumentParser(description='Download')
 parser.add_argument('lesson', type=str,
                     help='Lesson to change')
@@ -111,11 +118,11 @@ moss_loc = join(args.lesson, 'moss')
 if args.git:
     print("Using git")
     
-    download_git_all = f'{cred["classroom_downloader"]} -s -n {find_first_number_in_string(args.lesson)} -a 1 -o \"{join(course_data["data_folder"], moss_loc)}\" -p --no-new-path'
+    download_git_all = f'{cred["classroom_downloader"]} -s -n {encode_lesson(args.lesson)} -a 1 -o \"{join(course_data["data_folder"], moss_loc)}\" -p --no-new-path'
     print(download_git_all)
     subprocess.call(download_git_all)
     
-    download_git_my = f'{cred["classroom_downloader"]} -s -n {find_first_number_in_string(args.lesson)} -a 3 -r Волошин -o \"{join(course_data["data_folder"], args.lesson)}\" -p --no-new-path'
+    download_git_my = f'{cred["classroom_downloader"]} -s -n {encode_lesson(args.lesson)} -a 3 -r Волошин -o \"{join(course_data["data_folder"], args.lesson)}\" -p --no-new-path'
     print(download_git_my)
     subprocess.call(download_git_my)
 else:
