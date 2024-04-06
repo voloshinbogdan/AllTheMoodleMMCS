@@ -186,9 +186,11 @@ web.driver.quit()
 # Extract inner archs
 print('Extract inner archs..')
 archs = list(glob.glob(join(course_data['data_folder'], args.lesson, '**\\*.zip'), recursive = True)) + list(glob.glob(join(course_data['data_folder'], args.lesson, '**\\*.7z'), recursive = True)) + list(glob.glob(join(course_data['data_folder'], args.lesson, '**\\*.rar'), recursive = True))
+print('  Start extracting')
 for f in archs:
+    print(f'    extract {f}')
     d = os.path.splitext(f)[0]
-    subprocess.call(' '.join(['7z', 'x', '"' + f + '"', '-o"' + d + '"']), stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+    subprocess.call(' '.join(['7z', 'x', '"' + f + '"', '-o"' + d + '"' + "-aou"]), stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
 
 # Create Scripts
 print('Create Scripts..')
