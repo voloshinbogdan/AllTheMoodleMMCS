@@ -758,3 +758,4 @@ MoodleAssistant/credentials.json
 MoodleAssistant/cs*.json
 CheckMoodle/config.json
 MoodleAssistant/StudentData
+MoodleAssistant/.idea
