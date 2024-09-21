@@ -1,9 +1,6 @@
-from webbot import Browser
-from selenium.webdriver.support.ui import Select
 import argparse
 import time
 import json
-import datetime
 import moodle
 from os.path import join
 import os
@@ -157,6 +154,7 @@ for g in groups:
     join(cred['download_folder'], df)
     files.append(df)
 
+time.sleep(1)
 table = pd.concat(list(map(lambda x: pd.read_csv(join(cred['download_folder'], x), sep=','), files)), ignore_index=True)
 table.sort_values(by=['Полное имя']).to_csv(join(course_data['data_folder'], args.lesson, 'score.csv'), sep=',', encoding='utf-8-sig', index=False)
 for df in files:
