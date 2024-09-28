@@ -13,7 +13,11 @@ using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;   
+using OpenQA.Selenium.Chrome;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager.Helpers;
+
 
 namespace CheckMoodle
 {
@@ -234,6 +238,8 @@ namespace CheckMoodle
 
             // Loading task file
             {
+                new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
+
                 var cService = ChromeDriverService.CreateDefaultService();
                 cService.HideCommandPromptWindow = true;
 
