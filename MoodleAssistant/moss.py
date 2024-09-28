@@ -12,6 +12,7 @@ import pandas as pd
 from time import sleep
 from sys import exit
 from html.parser import HTMLParser
+from pywebcopy import save_website
 
 def report():
     return "report.html"
@@ -236,6 +237,26 @@ def report_moss(page, sortedtable, url):
 
     with open(report(), "w") as f:
       f.write(prepage + body + postpage)
+
+
+def download_website(url, download_folder):
+    kwargs = {
+        'bypass_robots': True,
+        'project_name': 'site_folder',
+        'over_write': False,
+        'allowed_domains': ['moss.stanford.edu'],
+        'load_css': True,
+        'load_images': True,
+        'load_javascript': True,
+        'recursive': True,
+        'recursion_depth': -1,  # Unlimited recursion depth
+    }
+    save_website(
+        url=url,
+        project_folder=download_folder,
+        **kwargs
+    )
+
 
 def main():
     args = get_args_parser().parse_args()
