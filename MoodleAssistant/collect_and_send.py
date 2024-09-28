@@ -1,4 +1,5 @@
 import moodle
+from moodle import click_text, go_to
 import os
 import json
 from os.path import join
@@ -44,17 +45,17 @@ table.to_csv(join(path, 'score_tmp.csv'), sep=',', encoding='utf-8-sig')
 
 # Send
 web = moodle.open_login(None, None)
-web.go_to(moodle.upload_grades.format(params['lesson_id']))
+go_to(web, moodle.UPLOAD_GRADES.format(params['lesson_id']))
 
 time.sleep(0.5)
-web.click('Разрешить обновление записей, которые были изменены в Moodle раньше, чем в ведомости.')
+click_text('Разрешить обновление записей, которые были изменены в Moodle раньше, чем в ведомости.')
 time.sleep(0.5)
-web.click('Выберите файл')
+click_text(web, 'Выберите файл')
 time.sleep(0.5)
-inps = web.driver.find_element_by_name('repo_upload_file')
+inps = web.find_element_by_name('repo_upload_file')
 time.sleep(0.5)
 inps.send_keys(join(path, 'score_tmp.csv'))
 time.sleep(0.5)
-web.click('Загрузить этот файл')
+click_text(web, 'Загрузить этот файл')
 time.sleep(0.5)
-web.click('Загрузить ведомость')
+click_text(web, 'Загрузить ведомость')

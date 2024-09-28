@@ -3,6 +3,5 @@ C:\Users\yabov\AppData\Roaming\Python\Python38\site-packages\webbot\drivers
 2. Folder Options → View tab → Advanced settings → "Launch folder windows in a separate process"
 
 Зависимости:
-webbot
 VSCode -> C/C++ Runner
 7zip добавить в Path

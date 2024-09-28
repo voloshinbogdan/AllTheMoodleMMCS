@@ -2,6 +2,7 @@ import argparse
 import time
 import json
 import moodle
+from moodle import click_text, go_to
 from os.path import join
 import os
 import shutil
@@ -9,6 +10,7 @@ import zipfile
 import moss
 import glob
 import pandas as pd
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.action_chains import ActionChains
 import subprocess
 from loguru import logger
@@ -28,7 +30,7 @@ def print(*args, **kwargs):
 builtins.print = print
 
 def getDownLoadedFileName(web, waitTime):
-    driver = web.driver
+    driver = web
     driver.execute_script("window.open()")
     # switch to new tab
     driver.switch_to.window(driver.window_handles[-1])
@@ -88,7 +90,7 @@ with open(args.json, 'tr', encoding='utf-8-sig') as f:
 
 web = moodle.open_login(args.u, args.p)
 
-web.go_to(course_data['course'])
+go_to(web, course_data['course'])
 lid = moodle.get_assignm_id(web, args.lesson)
 args.lesson = args.lesson.replace(':', '')
 time.sleep(1.0)
@@ -102,7 +104,7 @@ groups = course_data['groups']
 
 print('Download submissions..')
 def download_and_extract(group, ex_to):
-    web.go_to(moodle.download_answers.format(lid, group))
+    go_to(web, moodle.DOWNLOAD_ANSWERS.format(lid, group))
     df = getDownLoadedFileName(web, 12*3600)
     df_t = join(course_data['data_folder'], df)
     shutil.move(join(cred['download_folder'], df), df_t)
@@ -129,27 +131,27 @@ else:
         download_and_extract(groups[g]['group'], args.lesson)
 
 print('Download assign..')
-web.go_to(moodle.assign_options.format(lid))
-forms = list(map(lambda x: x.get_attribute("innerHTML") , web.driver.find_elements_by_class_name("editor_atto_content")))
+go_to(web, moodle.ASSIGN_OPTIONS.format(lid))
+forms = list(map(lambda x: x.get_attribute("innerHTML") , web.find_elements_by_class_name("editor_atto_content")))
 with open('task_template.html', 'r', encoding='utf-8-sig') as f:
     tt = f.read()
 with open(join(course_data['data_folder'], args.lesson, 'task.html'), 'w', encoding='utf-8-sig') as f:
     f.write(tt.format(''.join(forms)))
     
 print('Set offline grading to on..')
-web.click('Развернуть всё')
-checker = web.driver.find_element_by_name("assignfeedback_offline_enabled")
-actions = ActionChains(web.driver)
+click_text(web, 'Развернуть всё')
+checker = web.find_element_by_name("assignfeedback_offline_enabled")
+actions = ActionChains(web)
 if not checker.is_selected():
     actions.move_to_element(checker).perform()
     checker.click()
-web.click('Сохранить и показать')
+click_text(web, 'Сохранить и показать')
 
 # Download grades
 print('Download grades..')
 files = []
 for g in groups:
-    web.go_to(moodle.download_grades.format(lid, groups[g]['group']))
+    go_to(web, moodle.DOWNLOAD_GRADES.format(lid, groups[g]['group']))
     df = getDownLoadedFileName(web, 100)
     join(cred['download_folder'], df)
     files.append(df)
@@ -179,7 +181,7 @@ for f in list(glob.glob(join(course_data['data_folder'], args.lesson, '**/', '*'
         continue
     os.rename(f, join(fparent, fbase.replace(' ', '_')))
 
-web.driver.quit()
+web.quit()
 
 # Extract inner archs
 print('Extract inner archs..')

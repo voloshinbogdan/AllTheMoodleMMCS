@@ -1,4 +1,3 @@
-from webbot import Browser
 from selenium.webdriver.support.ui import Select
 import argparse
 import time
@@ -73,4 +72,4 @@ for e in l:
         inum = -1
 
 input('press Enter..')
-web.stop_client()        
+web.stop_client()
