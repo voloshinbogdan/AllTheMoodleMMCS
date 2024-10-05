@@ -353,6 +353,24 @@ namespace CheckMoodle
         private void Submissions_SelectedIndexChanged(object sender, EventArgs e) //+
         {
             this.Enabled = false;
+
+            if (Submissions.SelectedIndex == prevSubInd)
+                return;
+
+            if (score.Text == "" && prevSubInd != -1)
+            {
+                var warnRes = MessageBox.Show("Score wasn't filled continue?", "Warning", MessageBoxButtons.YesNo);
+                if (warnRes == DialogResult.No)
+                {
+                    Submissions.SelectedIndex = prevSubInd;
+                    this.Enabled = true;
+
+                    return;
+                }
+
+
+            }
+
             if (prevSubInd != -1)
                 SaveScore(prevSubInd);
             IDE.Show(Args[Submissions.SelectedIndex]);
