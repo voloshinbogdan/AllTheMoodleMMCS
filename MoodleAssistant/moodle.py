@@ -200,7 +200,7 @@ def click_text(driver: WebDriver, text: str):
     :param text: The exact visible text or value of the element to click.
     """
     # Construct the XPath to match either text() or @value
-    xpath_exact = f"//*[text()='{text}' or @value='{text}']"
+    xpath_exact = f"//*[contains(text(), '{text}') or contains(@value, '{text}')]"
 
     try:
         # Find the element
