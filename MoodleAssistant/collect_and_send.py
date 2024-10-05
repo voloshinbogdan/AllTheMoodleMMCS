@@ -7,6 +7,7 @@ import argparse
 import pandas as pd
 import glob
 import time
+from selenium.webdriver.common.action_chains import ActionChains
 
 parser = argparse.ArgumentParser(description='Send')
 parser.add_argument('path', type=str,
@@ -48,7 +49,7 @@ web = moodle.open_login(None, None)
 go_to(web, moodle.UPLOAD_GRADES.format(params['lesson_id']))
 
 time.sleep(0.5)
-click_text('Разрешить обновление записей, которые были изменены в Moodle раньше, чем в ведомости.')
+click_text(web, ' Разрешить обновление записей, которые были изменены в Moodle раньше, чем в ведомости.')
 time.sleep(0.5)
 click_text(web, 'Выберите файл')
 time.sleep(0.5)
@@ -58,4 +59,6 @@ inps.send_keys(join(path, 'score_tmp.csv'))
 time.sleep(0.5)
 click_text(web, 'Загрузить этот файл')
 time.sleep(0.5)
-click_text(web, 'Загрузить ведомость')
+submit_btn = web.find_element_by_xpath(f"//*[@name='submitbutton']")
+ActionChains(web).move_to_element(submit_btn).perform()
+submit_btn.click()
