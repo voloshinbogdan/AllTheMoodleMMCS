@@ -235,7 +235,7 @@ def report_moss(page, sortedtable, url):
 
     postpage = page.split('\n</TABLE>\n')[1]
 
-    with open(report(), "w") as f:
+    with open(report(), "w", encoding='utf-8-sig') as f:
       f.write(prepage + body + postpage)
 
 
