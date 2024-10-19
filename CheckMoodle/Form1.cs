@@ -12,11 +12,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
-using WebDriverManager.Helpers;
 
 
 namespace CheckMoodle
@@ -54,9 +49,6 @@ namespace CheckMoodle
 
         private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
         IIDE IDE;
-        IWebDriver webdriver;
-        private Process _processWebdriver;
-        private ClosableProcess _processChrome;
         LessonConfiguration lessonConfig;
         string workingDir;
 
@@ -237,34 +229,7 @@ namespace CheckMoodle
             }
 
             // Loading task file
-            {
-                new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-
-                var cService = ChromeDriverService.CreateDefaultService();
-                cService.HideCommandPromptWindow = true;
-
-                var options = new ChromeOptions();
-                options.AddExcludedArgument("enable-automation");
-
-                options.AddArgument("--window-position=-32000,-32000");
-                webdriver = new ChromeDriver(cService, options);
-                webdriver.Url = html.Replace("#", "%23");
-                
-                while (string.IsNullOrEmpty(webdriver.CurrentWindowHandle))
-                {
-                    Thread.Sleep(100);
-                }
-                string title = "task.html - Google Chrome";
-                _processWebdriver = Process.GetProcessesByName("chromedriver").FirstOrDefault();
-                _processChrome = new ClosableProcess(Process.GetProcesses()
-                    .FirstOrDefault(x => x.MainWindowTitle == title));
-                SetParent(_processChrome.p.MainWindowHandle, panel2.Handle);
-                MakeProcessWindowBorderless(_processChrome.p);
-                ChromeForegroundHookId = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, IDEEventDelegate,
-                    (uint)_processChrome.p.Id, 0, WINEVENT_OUTOFCONTEXT);
-                panel2_Resize(null, null);
-
-            }
+            taskViewer.Source = new Uri(html.Replace("#", "%23"));
 
             // Set Minimum to 1 to represent the first file being copied.
             checkProgress.Minimum = 0;
@@ -287,13 +252,13 @@ namespace CheckMoodle
                     SetWindowPos(this.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
                 }));*/
             }
-            else if (hwnd == _processChrome.p.MainWindowHandle)
-            {
-                this.Invoke((Action)(() =>
-                {   
-                    SetForegroundWindow(this.Handle);
-                }));
-            }
+            //else if (hwnd == _processChrome.p.MainWindowHandle)
+            //{
+            //    this.Invoke((Action)(() =>
+            //    {   
+            //        SetForegroundWindow(this.Handle);
+            //    }));
+            //}
         }
 
         private void button1_Click(object sender, EventArgs e) //+
@@ -302,8 +267,8 @@ namespace CheckMoodle
         }
         private void panel2_Resize(object sender, EventArgs e)
         {
-            if (_processChrome.p.MainWindowHandle != null)
-                MoveWindow(_processChrome.p.MainWindowHandle, 0, -50, panel2.Width, panel2.Height + 50, true);
+            //if (_processChrome.p.MainWindowHandle != null)
+            //    MoveWindow(_processChrome.p.MainWindowHandle, 0, -50, panel2.Width, panel2.Height + 50, true);
         }
 
         private void back_Click(object sender, EventArgs e)  //+
@@ -393,7 +358,7 @@ namespace CheckMoodle
             // Load task if exists
             var pdf = Directory.GetFiles(Args[Submissions.SelectedIndex], "*.pdf", SearchOption.AllDirectories).FirstOrDefault();
             if (pdf != null)
-                webdriver.Url = pdf.Replace("#", "%23");
+                taskViewer.Source = new Uri(pdf.Replace("#", "%23"));
 
             // Load Score
             string score_path = Path.Combine(Args[Submissions.SelectedIndex], "score.json");
@@ -509,25 +474,6 @@ namespace CheckMoodle
             {
             }
 
-            try
-            {
-                webdriver.Quit();
-
-            }
-            catch (Exception)
-            {
-
-            }
-
-            try
-            {
-                webdriver.Dispose();
-
-            }
-            catch (Exception)
-            {
-
-            }
         }
 
         private void Form1_Resize(object sender, EventArgs e)
