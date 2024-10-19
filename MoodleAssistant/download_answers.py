@@ -139,7 +139,15 @@ def download_and_extract(web, lid, course_data, cred, group, extract_to):
     go_to(web, moodle.DOWNLOAD_ANSWERS.format(lid, group))
     downloaded_file = get_downloaded_filename(web, 12 * 3600)
     destination_file = join(course_data['data_folder'], downloaded_file)
-    shutil.move(join(cred['download_folder'], downloaded_file), destination_file)
+    source_file = join(cred['download_folder'], downloaded_file)
+
+    while True:
+        if os.path.exists(source_file):
+            break;
+        time.sleep(1)
+        print(f"{source_file} doesn't exists")
+
+    shutil.move(source_file, destination_file)
     with zipfile.ZipFile(destination_file, "r") as zip_ref:
         zip_ref.extractall(join(course_data['data_folder'], extract_to))
     os.remove(destination_file)
