@@ -35,6 +35,7 @@ namespace CheckMoodle
             this.scoreError = new System.Windows.Forms.ErrorProvider(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.taskViewer = new CefSharp.WinForms.ChromiumWebBrowser();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.justifyScores = new System.Windows.Forms.Button();
             this.generateFromTable = new System.Windows.Forms.Button();
@@ -61,7 +62,17 @@ namespace CheckMoodle
             this.tableToCommentError = new System.Windows.Forms.ErrorProvider(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.taskViewer = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.refreshIDEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.justifyGradesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addNotesFromTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mossToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.studentdirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.scoreError)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -81,7 +92,7 @@ namespace CheckMoodle
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.taskViewer)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // scoreError
@@ -102,8 +113,8 @@ namespace CheckMoodle
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(558, 594);
-            this.splitContainer2.SplitterDistance = 341;
+            this.splitContainer2.Size = new System.Drawing.Size(558, 570);
+            this.splitContainer2.SplitterDistance = 327;
             this.splitContainer2.TabIndex = 14;
             // 
             // panel2
@@ -113,9 +124,18 @@ namespace CheckMoodle
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(558, 341);
+            this.panel2.Size = new System.Drawing.Size(558, 327);
             this.panel2.TabIndex = 6;
             this.panel2.Resize += new System.EventHandler(this.panel2_Resize);
+            // 
+            // taskViewer
+            // 
+            this.taskViewer.ActivateBrowserOnCreation = false;
+            this.taskViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.taskViewer.Location = new System.Drawing.Point(0, 0);
+            this.taskViewer.Name = "taskViewer";
+            this.taskViewer.Size = new System.Drawing.Size(554, 323);
+            this.taskViewer.TabIndex = 0;
             // 
             // splitContainer3
             // 
@@ -141,7 +161,7 @@ namespace CheckMoodle
             this.splitContainer3.Panel2.Controls.Add(this.Submissions);
             this.splitContainer3.Panel2.Controls.Add(this.Save);
             this.splitContainer3.Panel2.Controls.Add(this.back);
-            this.splitContainer3.Size = new System.Drawing.Size(558, 249);
+            this.splitContainer3.Size = new System.Drawing.Size(558, 239);
             this.splitContainer3.SplitterDistance = 329;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -184,7 +204,7 @@ namespace CheckMoodle
             this.dataGridView1.Location = new System.Drawing.Point(13, 11);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 25;
-            this.dataGridView1.Size = new System.Drawing.Size(257, 222);
+            this.dataGridView1.Size = new System.Drawing.Size(257, 212);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             this.dataGridView1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValidated);
@@ -234,7 +254,7 @@ namespace CheckMoodle
             // 
             this.checkProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkProgress.Location = new System.Drawing.Point(3, 223);
+            this.checkProgress.Location = new System.Drawing.Point(3, 213);
             this.checkProgress.Name = "checkProgress";
             this.checkProgress.Size = new System.Drawing.Size(217, 10);
             this.checkProgress.TabIndex = 14;
@@ -272,7 +292,7 @@ namespace CheckMoodle
             // SaveB
             // 
             this.SaveB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveB.Location = new System.Drawing.Point(141, 172);
+            this.SaveB.Location = new System.Drawing.Point(141, 162);
             this.SaveB.Name = "SaveB";
             this.SaveB.Size = new System.Drawing.Size(72, 23);
             this.SaveB.TabIndex = 11;
@@ -297,7 +317,7 @@ namespace CheckMoodle
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comment.Location = new System.Drawing.Point(3, 34);
             this.comment.Name = "comment";
-            this.comment.Size = new System.Drawing.Size(212, 132);
+            this.comment.Size = new System.Drawing.Size(212, 122);
             this.comment.TabIndex = 2;
             this.comment.Text = "";
             // 
@@ -306,7 +326,7 @@ namespace CheckMoodle
             this.Submissions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Submissions.FormattingEnabled = true;
-            this.Submissions.Location = new System.Drawing.Point(3, 197);
+            this.Submissions.Location = new System.Drawing.Point(3, 187);
             this.Submissions.Name = "Submissions";
             this.Submissions.Size = new System.Drawing.Size(217, 21);
             this.Submissions.TabIndex = 9;
@@ -315,7 +335,7 @@ namespace CheckMoodle
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(78, 172);
+            this.Save.Location = new System.Drawing.Point(78, 162);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(57, 23);
             this.Save.TabIndex = 3;
@@ -326,7 +346,7 @@ namespace CheckMoodle
             // back
             // 
             this.back.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.back.Location = new System.Drawing.Point(16, 172);
+            this.back.Location = new System.Drawing.Point(16, 162);
             this.back.Name = "back";
             this.back.Size = new System.Drawing.Size(56, 23);
             this.back.TabIndex = 8;
@@ -360,7 +380,7 @@ namespace CheckMoodle
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -370,7 +390,7 @@ namespace CheckMoodle
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1209, 594);
+            this.splitContainer1.Size = new System.Drawing.Size(1209, 570);
             this.splitContainer1.SplitterDistance = 647;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -380,23 +400,98 @@ namespace CheckMoodle
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(647, 594);
+            this.panel1.Size = new System.Drawing.Size(647, 570);
             this.panel1.TabIndex = 0;
             this.panel1.Resize += new System.EventHandler(this.panel1_Resize);
             // 
-            // taskViewer
+            // menuStrip1
             // 
-            this.taskViewer.AllowExternalDrop = true;
-            this.taskViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.taskViewer.CreationProperties = null;
-            this.taskViewer.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.taskViewer.Location = new System.Drawing.Point(3, 3);
-            this.taskViewer.Name = "taskViewer";
-            this.taskViewer.Size = new System.Drawing.Size(548, 331);
-            this.taskViewer.TabIndex = 0;
-            this.taskViewer.ZoomFactor = 1D;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshIDEToolStripMenuItem,
+            this.nextToolStripMenuItem,
+            this.previousToolStripMenuItem,
+            this.saveToolStripMenuItem,
+            this.justifyGradesToolStripMenuItem,
+            this.addNotesFromTableToolStripMenuItem,
+            this.mossToolStripMenuItem,
+            this.studentdirectoryToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1209, 24);
+            this.menuStrip1.TabIndex = 4;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // refreshIDEToolStripMenuItem
+            // 
+            this.refreshIDEToolStripMenuItem.Name = "refreshIDEToolStripMenuItem";
+            this.refreshIDEToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
+            this.refreshIDEToolStripMenuItem.Text = "&Refresh IDE";
+            this.refreshIDEToolStripMenuItem.Click += new System.EventHandler(this.refreshIDEToolStripMenuItem_Click);
+            // 
+            // nextToolStripMenuItem
+            // 
+            this.nextToolStripMenuItem.Name = "nextToolStripMenuItem";
+            this.nextToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.nextToolStripMenuItem.Text = "&Next";
+            this.nextToolStripMenuItem.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // previousToolStripMenuItem
+            // 
+            this.previousToolStripMenuItem.Name = "previousToolStripMenuItem";
+            this.previousToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.previousToolStripMenuItem.Text = "&Previous";
+            this.previousToolStripMenuItem.Click += new System.EventHandler(this.back_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.saveToolStripMenuItem.Text = "&Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveB_Click);
+            // 
+            // justifyGradesToolStripMenuItem
+            // 
+            this.justifyGradesToolStripMenuItem.Name = "justifyGradesToolStripMenuItem";
+            this.justifyGradesToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
+            this.justifyGradesToolStripMenuItem.Text = "&Justify grades";
+            this.justifyGradesToolStripMenuItem.Click += new System.EventHandler(this.justifyScores_Click);
+            // 
+            // addNotesFromTableToolStripMenuItem
+            // 
+            this.addNotesFromTableToolStripMenuItem.Name = "addNotesFromTableToolStripMenuItem";
+            this.addNotesFromTableToolStripMenuItem.Size = new System.Drawing.Size(131, 20);
+            this.addNotesFromTableToolStripMenuItem.Text = "Add notes from &table";
+            this.addNotesFromTableToolStripMenuItem.Click += new System.EventHandler(this.generateFromTable_Click);
+            // 
+            // mossToolStripMenuItem
+            // 
+            this.mossToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addToolStripMenuItem,
+            this.showToolStripMenuItem});
+            this.mossToolStripMenuItem.Name = "mossToolStripMenuItem";
+            this.mossToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.mossToolStripMenuItem.Text = "&Moss";
+            // 
+            // addToolStripMenuItem
+            // 
+            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.addToolStripMenuItem.Text = "&Add";
+            this.addToolStripMenuItem.Click += new System.EventHandler(this.addMoss_Click);
+            // 
+            // showToolStripMenuItem
+            // 
+            this.showToolStripMenuItem.Name = "showToolStripMenuItem";
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.showToolStripMenuItem.Text = "&Show";
+            this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
+            // 
+            // studentdirectoryToolStripMenuItem
+            // 
+            this.studentdirectoryToolStripMenuItem.Name = "studentdirectoryToolStripMenuItem";
+            this.studentdirectoryToolStripMenuItem.Size = new System.Drawing.Size(110, 20);
+            this.studentdirectoryToolStripMenuItem.Text = "Student &directory";
+            this.studentdirectoryToolStripMenuItem.Click += new System.EventHandler(this.studentdirectoryToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -404,6 +499,8 @@ namespace CheckMoodle
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1209, 594);
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
             this.Activated += new System.EventHandler(this.Form1_Activated);
@@ -431,8 +528,10 @@ namespace CheckMoodle
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.taskViewer)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -467,7 +566,18 @@ namespace CheckMoodle
         private System.Windows.Forms.ProgressBar checkProgress;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Panel panel1;
-        private Microsoft.Web.WebView2.WinForms.WebView2 taskViewer;
+        private CefSharp.WinForms.ChromiumWebBrowser taskViewer;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem refreshIDEToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nextToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previousToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem justifyGradesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addNotesFromTableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mossToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem studentdirectoryToolStripMenuItem;
     }
 }
 

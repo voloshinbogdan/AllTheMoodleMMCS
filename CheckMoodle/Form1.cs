@@ -44,6 +44,8 @@ namespace CheckMoodle
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [DllImport("user32.dll")]
         public static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
+        [DllImport("user32.dll")]
+        private static extern IntPtr SetFocus(IntPtr hWnd);
 
         // <-WIN32
 
@@ -78,6 +80,7 @@ namespace CheckMoodle
         private const int SWP_NOSIZE = 0x0001;
         private const int SWP_NOACTIVATE = 0x0010;
         private const int SWP_SHOWWINDOW = 0x0040;
+        private const int GWL_HWNDPARENT = -8;
         private static readonly IntPtr HWND_TOP = IntPtr.Zero;
         private static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
@@ -229,7 +232,7 @@ namespace CheckMoodle
             }
 
             // Loading task file
-            taskViewer.Source = new Uri(html.Replace("#", "%23"));
+            taskViewer.Load(html.Replace("#", "%23"));
 
             // Set Minimum to 1 to represent the first file being copied.
             checkProgress.Minimum = 0;
@@ -317,10 +320,11 @@ namespace CheckMoodle
 
         private void Submissions_SelectedIndexChanged(object sender, EventArgs e) //+
         {
-            this.Enabled = false;
-
             if (Submissions.SelectedIndex == prevSubInd)
                 return;
+
+            this.Enabled = false;
+
 
             if (score.Text == "" && prevSubInd != -1)
             {
@@ -358,7 +362,7 @@ namespace CheckMoodle
             // Load task if exists
             var pdf = Directory.GetFiles(Args[Submissions.SelectedIndex], "*.pdf", SearchOption.AllDirectories).FirstOrDefault();
             if (pdf != null)
-                taskViewer.Source = new Uri(pdf.Replace("#", "%23"));
+                taskViewer.Load(pdf.Replace("#", "%23"));
 
             // Load Score
             string score_path = Path.Combine(Args[Submissions.SelectedIndex], "score.json");
@@ -443,8 +447,7 @@ namespace CheckMoodle
 
         private void moss_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) //+
         {
-            if (mossURL != null)
-                Process.Start(mossURL);
+            showToolStripMenuItem_Click(sender, e);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -777,12 +780,32 @@ namespace CheckMoodle
                 MoveWindow(IDE.GetProcess().MainWindowHandle, 0, 0, panel1.Width, panel1.Height, true);
             }
         }
+        private void refreshIDEToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetParent(IDE.GetProcess().MainWindowHandle, panel1.Handle);
+            ShowWindow(IDE.GetProcess().MainWindowHandle, SW_MAXIMIZE);
+
+        }
+
+        private void showToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (mossURL != null)
+                Process.Start(mossURL);
+        }
+
+        private void studentdirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        Process.Start("explorer.exe", Args[Submissions.SelectedIndex]);
+
+        }
     }
     public class EvaluationData
     {
         public double score { get; set; }
         public string comment { get; set; }
         public List<TaskEntry> Tasks { get; set; } = new List<TaskEntry>();
+
     }
 
     public class TaskEntry
