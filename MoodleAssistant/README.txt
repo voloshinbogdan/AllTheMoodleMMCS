@@ -5,3 +5,6 @@ C:\Users\yabov\AppData\Roaming\Python\Python38\site-packages\webbot\drivers
 Зависимости:
 VSCode -> C/C++ Runner
 7zip добавить в Path
+
+
+Для classroom downloader к каждому имени в конце добавить assignsubmission_file_git
