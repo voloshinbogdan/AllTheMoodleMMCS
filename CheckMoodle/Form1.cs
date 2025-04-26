@@ -784,6 +784,7 @@ namespace CheckMoodle
         {
             SetParent(IDE.GetProcess().MainWindowHandle, panel1.Handle);
             ShowWindow(IDE.GetProcess().MainWindowHandle, SW_MAXIMIZE);
+            IDE.Show(Args[Submissions.SelectedIndex]);
 
         }
 
